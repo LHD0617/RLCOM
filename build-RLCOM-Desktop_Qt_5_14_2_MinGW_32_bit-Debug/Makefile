@@ -253,6 +253,7 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 		../RLCOM/RLCOM.pro \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Widgets.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl \
+		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5SerialPort.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Core.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/qtmain.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/build_pass.prf \
@@ -441,6 +442,7 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 ../RLCOM/RLCOM.pro:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Widgets.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl:
+../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5SerialPort.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Core.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/qtmain.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/build_pass.prf:

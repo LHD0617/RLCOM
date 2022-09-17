@@ -40,7 +40,7 @@ public:
     QLabel *CheckBitLab;
     QComboBox *DataBitCbox;
     QComboBox *CheckBitCbox;
-    QComboBox *ProtCbox;
+    QComboBox *PortCbox;
     QComboBox *StopBitCbox;
     QLabel *StopBitLab;
     QPushButton *SwitchPortPbtn;
@@ -116,10 +116,10 @@ public:
 
         gridLayout->addWidget(CheckBitCbox, 3, 1, 1, 1);
 
-        ProtCbox = new QComboBox(ProtConfigure);
-        ProtCbox->setObjectName(QString::fromUtf8("ProtCbox"));
+        PortCbox = new QComboBox(ProtConfigure);
+        PortCbox->setObjectName(QString::fromUtf8("PortCbox"));
 
-        gridLayout->addWidget(ProtCbox, 0, 1, 1, 1);
+        gridLayout->addWidget(PortCbox, 0, 1, 1, 1);
 
         StopBitCbox = new QComboBox(ProtConfigure);
         StopBitCbox->setObjectName(QString::fromUtf8("StopBitCbox"));

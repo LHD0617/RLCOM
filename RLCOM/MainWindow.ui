@@ -77,7 +77,7 @@
         <widget class="QComboBox" name="CheckBitCbox"/>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="ProtCbox"/>
+        <widget class="QComboBox" name="PortCbox"/>
        </item>
        <item row="4" column="1">
         <widget class="QComboBox" name="StopBitCbox"/>
