@@ -22,6 +22,19 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    TimeLab = new QLabel();
+
+    DataLab = new QLabel(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
+                         .arg(ReceiveCount, 10)
+                         .arg(ReceiveSpeed, 10)
+                         .arg(SendCount, 10));
+
+    ui->statusbar->addPermanentWidget(DataLab);
+
+    ui->statusbar->addPermanentWidget(TimeLab);
+
+    UpdateTime();
+
     for(uint8_t i = 0; i < MAX_BAUDLIST; i++)
     {
         ui->BaudCbox->addItem(BaudList[i]);
@@ -45,7 +58,17 @@ MainWindow::MainWindow(QWidget *parent)
     }
     connect(ui->SwitchPortPbtn, SIGNAL(clicked()), this, SLOT(SwitchPort()));
 
+    connect(ui->CleanReceivePbtn, SIGNAL(clicked()), this, SLOT(CleanReceiveData()));
+
+    connect(ui->CleanStatsPbtn, SIGNAL(clicked()), this, SLOT(CleanStats()));
+
+    connect(&Ser, SIGNAL(readyRead()), this, SLOT(ReceiveData()));
+
     connect(&RefreshPortTimer, SIGNAL(timeout()), this, SLOT(RefreshPort()));
+
+    connect(&UpdateTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
+
+    UpdateTimeTimer.start(1000);
 
     RefreshPortTimer.start(100);
 }
@@ -178,10 +201,110 @@ void MainWindow::SwitchPort()
 }
 
 /**
+    * @name		CleanReceiveData
+    * @brief  	清空接收数据函数
+  */
+void MainWindow::CleanReceiveData()
+{
+    ui->ReceiveTextEdit->clear();
+}
+
+/**
+    * @name		CleanStats
+    * @brief  	清空接收统计函数
+  */
+void MainWindow::CleanStats()
+{
+    ReceiveCount = 0;
+
+    ReceiveLastCount = 0;
+
+    ReceiveSpeed = 0;
+
+    SendCount = 0;
+
+    DataLab->setText(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
+                    .arg(ReceiveCount, 10)
+                    .arg(ReceiveSpeed, 10)
+                    .arg(SendCount, 10));
+}
+
+/**
+    * @name		ReceiveData
+    * @brief  	接收数据函数
+  */
+void MainWindow::ReceiveData()
+{
+    QByteArray Data = Ser.readAll();
+
+    if(ui->TalkWindowCbox->isChecked())
+    {
+        ui->ReceiveTextEdit->append("<font color=\"#FF0000\">" + NowTime + " Receive:" + "</font>");
+    }
+
+    if(!ui->HexShowCbox->isChecked())
+    {
+        ui->ReceiveTextEdit->append(Data);
+    }
+    else
+    {
+        ui->ReceiveTextEdit->append(ByteArrayToHexString(Data));
+    }
+    if(ui->AutoFollowCbox->isChecked())
+    {
+        ui->ReceiveTextEdit->moveCursor(QTextCursor::End);
+    }
+    ReceiveCount += Data.size();
+}
+
+/**
+    * @name		UpdateTime
+    * @brief  	更新时间函数
+  */
+void MainWindow::UpdateTime()
+{
+    time_t nowtime;
+
+    struct tm* p;
+
+    time(&nowtime);
+
+    p = localtime(&nowtime);
+
+    NowTime = QString("%1:%2:%3").arg(p->tm_hour, 2, 10, QLatin1Char('0'))
+            .arg(p->tm_min, 2, 10, QLatin1Char('0'))
+            .arg(p->tm_sec, 2, 10, QLatin1Char('0'));
+
+    TimeLab->setText("当前时间：" + NowTime);
+
+    ReceiveSpeed = ReceiveCount - ReceiveLastCount;
+
+    ReceiveLastCount = ReceiveCount;
+
+    DataLab->setText(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
+                    .arg(ReceiveCount, 10)
+                    .arg(ReceiveSpeed, 10)
+                    .arg(SendCount, 10));
+}
+
+/**
     * @name		ShowMessage
     * @brief  	显示消息函数
   */
 void MainWindow::ShowMessage(QString Message)
 {
     ui->statusbar->showMessage(Message, 1500);
+}
+
+/**
+    * @name		ByteArrayToHexString
+    * @brief  	QByteArray转QString
+  */
+QString ByteArrayToHexString(QByteArray ascii)
+{
+    QString ret;
+    for(int i = 0; i < ascii.count(); i++)
+        ret.append(QString("%1 ").arg((uchar)ascii.at(i), 2, 16, (QChar)'0'));
+
+    return ret.toUpper();
 }

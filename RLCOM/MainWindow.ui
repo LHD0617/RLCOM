@@ -163,7 +163,11 @@
         </widget>
        </item>
        <item row="0" column="0" colspan="5">
-        <widget class="QTextEdit" name="SendTextEdit"/>
+        <widget class="QPlainTextEdit" name="SendPlainTextEdit">
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -201,9 +205,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="5">
-        <widget class="QTextEdit" name="ReceiveTextEdit"/>
-       </item>
        <item row="1" column="4">
         <widget class="QPushButton" name="CleanStatsPbtn">
          <property name="text">
@@ -218,11 +219,24 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0" colspan="5">
+        <widget class="QTextEdit" name="ReceiveTextEdit">
+         <property name="lineWrapMode">
+          <enum>QTextEdit::WidgetWidth</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
     <item row="0" column="0">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="LogoLab">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>200</horstretch>

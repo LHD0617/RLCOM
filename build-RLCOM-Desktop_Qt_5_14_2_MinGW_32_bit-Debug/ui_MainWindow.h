@@ -18,6 +18,7 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSpinBox>
@@ -53,16 +54,16 @@ public:
     QPushButton *CleanSendPbtn;
     QCheckBox *TimeSendCbox;
     QCheckBox *HexSendCbox;
-    QTextEdit *SendTextEdit;
+    QPlainTextEdit *SendPlainTextEdit;
     QGroupBox *ReceiveGbox;
     QGridLayout *gridLayout_2;
     QCheckBox *HexShowCbox;
     QPushButton *CleanReceivePbtn;
     QCheckBox *TalkWindowCbox;
-    QTextEdit *ReceiveTextEdit;
     QPushButton *CleanStatsPbtn;
     QCheckBox *AutoFollowCbox;
-    QLabel *label;
+    QTextEdit *ReceiveTextEdit;
+    QLabel *LogoLab;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -182,10 +183,11 @@ public:
 
         gridLayout_3->addWidget(HexSendCbox, 1, 0, 1, 1);
 
-        SendTextEdit = new QTextEdit(SendGbox);
-        SendTextEdit->setObjectName(QString::fromUtf8("SendTextEdit"));
+        SendPlainTextEdit = new QPlainTextEdit(SendGbox);
+        SendPlainTextEdit->setObjectName(QString::fromUtf8("SendPlainTextEdit"));
+        SendPlainTextEdit->setReadOnly(false);
 
-        gridLayout_3->addWidget(SendTextEdit, 0, 0, 1, 5);
+        gridLayout_3->addWidget(SendPlainTextEdit, 0, 0, 1, 5);
 
 
         gridLayout_4->addWidget(SendGbox, 2, 1, 1, 1);
@@ -214,11 +216,6 @@ public:
 
         gridLayout_2->addWidget(TalkWindowCbox, 1, 2, 1, 1);
 
-        ReceiveTextEdit = new QTextEdit(ReceiveGbox);
-        ReceiveTextEdit->setObjectName(QString::fromUtf8("ReceiveTextEdit"));
-
-        gridLayout_2->addWidget(ReceiveTextEdit, 0, 0, 1, 5);
-
         CleanStatsPbtn = new QPushButton(ReceiveGbox);
         CleanStatsPbtn->setObjectName(QString::fromUtf8("CleanStatsPbtn"));
 
@@ -229,22 +226,30 @@ public:
 
         gridLayout_2->addWidget(AutoFollowCbox, 1, 1, 1, 1);
 
+        ReceiveTextEdit = new QTextEdit(ReceiveGbox);
+        ReceiveTextEdit->setObjectName(QString::fromUtf8("ReceiveTextEdit"));
+        ReceiveTextEdit->setLineWrapMode(QTextEdit::WidgetWidth);
+        ReceiveTextEdit->setReadOnly(true);
+        ReceiveTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+
+        gridLayout_2->addWidget(ReceiveTextEdit, 0, 0, 1, 5);
+
 
         gridLayout_4->addWidget(ReceiveGbox, 0, 1, 2, 1);
 
-        label = new QLabel(centralwidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        LogoLab = new QLabel(centralwidget);
+        LogoLab->setObjectName(QString::fromUtf8("LogoLab"));
         QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy2.setHorizontalStretch(200);
         sizePolicy2.setVerticalStretch(200);
-        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy2);
-        label->setMaximumSize(QSize(200, 200));
-        label->setAutoFillBackground(false);
-        label->setPixmap(QPixmap(QString::fromUtf8(":/new/prefix1/logo.png")));
-        label->setScaledContents(true);
+        sizePolicy2.setHeightForWidth(LogoLab->sizePolicy().hasHeightForWidth());
+        LogoLab->setSizePolicy(sizePolicy2);
+        LogoLab->setMaximumSize(QSize(200, 200));
+        LogoLab->setAutoFillBackground(false);
+        LogoLab->setPixmap(QPixmap(QString::fromUtf8(":/new/prefix1/logo.png")));
+        LogoLab->setScaledContents(true);
 
-        gridLayout_4->addWidget(label, 0, 0, 1, 1);
+        gridLayout_4->addWidget(LogoLab, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
@@ -277,7 +282,7 @@ public:
         TalkWindowCbox->setText(QCoreApplication::translate("MainWindow", "\345\257\271\350\257\235\345\274\217\347\252\227\345\217\243", nullptr));
         CleanStatsPbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\347\273\237\350\256\241", nullptr));
         AutoFollowCbox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\345\212\250\350\267\237\350\270\252", nullptr));
-        label->setText(QString());
+        LogoLab->setText(QString());
     } // retranslateUi
 
 };
