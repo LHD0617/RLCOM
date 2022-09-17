@@ -226,6 +226,7 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/qt_config.prf \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g++/qmake.conf \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/exclusive_builds.prf \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/toolchain.prf \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/default_pre.prf \
@@ -254,8 +255,8 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Core.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/qtmain.prl \
-		.qmake.stash \
-		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/build_pass.prf
+		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/build_pass.prf \
+		../RLCOM/ICON/icon.qrc
 	$(QMAKE) -o Makefile ..\RLCOM\RLCOM.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/spec_pre.prf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/qdevice.pri:
@@ -413,6 +414,7 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/qt_config.prf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g++/qmake.conf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/exclusive_builds.prf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/toolchain.prf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/default_pre.prf:
@@ -441,8 +443,8 @@ Makefile: ../RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win32-g
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Core.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/qtmain.prl:
-.qmake.stash:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/build_pass.prf:
+../RLCOM/ICON/icon.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ..\RLCOM\RLCOM.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
 
