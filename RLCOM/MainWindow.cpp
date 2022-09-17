@@ -56,17 +56,29 @@ MainWindow::MainWindow(QWidget *parent)
     {
         ui->StopBitCbox->addItem(StopBitList[i]);
     }
+    ReadConfigure();
+
     connect(ui->SwitchPortPbtn, SIGNAL(clicked()), this, SLOT(SwitchPort()));
 
     connect(ui->CleanReceivePbtn, SIGNAL(clicked()), this, SLOT(CleanReceiveData()));
 
     connect(ui->CleanStatsPbtn, SIGNAL(clicked()), this, SLOT(CleanStats()));
 
+    connect(ui->CleanSendPbtn, SIGNAL(clicked()), this, SLOT(CleanSendData()));
+
+    connect(ui->SendPbtn, SIGNAL(clicked()), this, SLOT(SendData()));
+
+    connect(ui->TimeSendCbox, SIGNAL(stateChanged(int)), this, SLOT(AutoSend(int)));
+
     connect(&Ser, SIGNAL(readyRead()), this, SLOT(ReceiveData()));
+
+    connect(&AutoSendTimer, SIGNAL(timeout()), this, SLOT(SendData()));
 
     connect(&RefreshPortTimer, SIGNAL(timeout()), this, SLOT(RefreshPort()));
 
     connect(&UpdateTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
+
+    ui->SendTextEdit->installEventFilter(this);
 
     UpdateTimeTimer.start(1000);
 
@@ -126,6 +138,8 @@ void MainWindow::RefreshPort()
   */
 void MainWindow::SwitchPort()
 {
+    WriteConfigure();
+
     if(!SwitchPortFlag)
     {
         if(ui->PortCbox->count() > 0)
@@ -230,6 +244,15 @@ void MainWindow::CleanStats()
 }
 
 /**
+    * @name		CleanSendData
+    * @brief  	清空发送数据函数
+  */
+void MainWindow::CleanSendData()
+{
+    ui->SendTextEdit->clear();
+}
+
+/**
     * @name		ReceiveData
     * @brief  	接收数据函数
   */
@@ -255,6 +278,211 @@ void MainWindow::ReceiveData()
         ui->ReceiveTextEdit->moveCursor(QTextCursor::End);
     }
     ReceiveCount += Data.size();
+}
+
+/**
+    * @name		SendData
+    * @brief  	发送数据函数
+  */
+void MainWindow::SendData()
+{
+    if(SwitchPortFlag)
+    {
+        QString Data = ui->SendTextEdit->toPlainText();
+
+        if(Data.size() > 0)
+        {
+            if(ui->TalkWindowCbox->isChecked())
+            {
+                ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>");
+
+                ui->ReceiveTextEdit->append(Data);
+            }
+
+            if(ui->HexSendCbox->isChecked())
+            {
+                if (Data.contains(" "))
+                {
+                    Data.replace(QString(" "),QString(""));
+                }
+                QByteArray TempData = HexStringToQByteArray(Data);
+
+                Ser.write(TempData);
+
+                SendCount += TempData.size();
+            }
+            else
+            {
+                if(ui->AutoEnterCBox->isChecked())
+                {
+                    Data.append("\r\n");
+                }
+                Ser.write(Data.toUtf8());
+
+                SendCount += Data.size();
+            }
+            if(ui->SendCleanCbox->isChecked())
+            {
+                CleanSendData();
+            }
+        }
+        else
+        {
+            ShowMessage("请先输入数据");
+        }
+    }
+    else
+    {
+        ShowMessage("请先打开串口");
+    }
+}
+
+/**
+    * @name		AutoSend
+    * @brief  	定时发送
+  */
+void MainWindow::AutoSend(int state)
+{
+    if(state)
+    {
+        ui->TimeSBox->setReadOnly(true);
+
+        uint16_t time = ui->TimeSBox->value();
+
+        AutoSendTimer.start(time);
+    }
+    else
+    {
+        AutoSendTimer.stop();
+
+        ui->TimeSBox->setReadOnly(false);
+    }
+}
+
+/**
+    * @name		WriteConfigure
+    * @brief  	写入配置文件函数
+  */
+void MainWindow::WriteConfigure()
+{
+    FILE *fp = fopen(ConfigureFileName, "w");
+
+    fprintf(fp, "[Configure]\n");
+
+    fprintf(fp, QString("[Baud]=%1\n").arg(ui->BaudCbox->currentIndex()).toLatin1());
+
+    fprintf(fp, QString("[DataBit]=%1\n").arg(ui->DataBitCbox->currentIndex()).toLatin1());
+
+    fprintf(fp, QString("[CheckBit]=%1\n").arg(ui->CheckBitCbox->currentIndex()).toLatin1());
+
+    fprintf(fp, QString("[StopBit]=%1\n").arg(ui->StopBitCbox->currentIndex()).toLatin1());
+
+    if(ui->HexShowCbox->isChecked())
+        fprintf(fp, "[HexShow]=true\n");
+    else
+        fprintf(fp, "[HexShow]=false\n");
+    if(ui->AutoFollowCbox->isChecked())
+        fprintf(fp, "[AutoFollow]=true\n");
+    else
+        fprintf(fp, "[AutoFollow]=false\n");
+    if(ui->TalkWindowCbox->isChecked())
+        fprintf(fp, "[TalkWindow]=true\n");
+    else
+        fprintf(fp, "[TalkWindow]=false\n");
+    if(ui->HexSendCbox->isChecked())
+        fprintf(fp, "[HexSend]=true\n");
+    else
+        fprintf(fp, "[HexSend]=false\n");
+    if(ui->EnterSendCBox->isChecked())
+        fprintf(fp, "[EnterSend]=true\n");
+    else
+        fprintf(fp, "[EnterSend]=false\n");
+    if(ui->AutoEnterCBox->isChecked())
+        fprintf(fp, "[AutoEnter]=true\n");
+    else
+        fprintf(fp, "[AutoEnter]=false\n");
+    if(ui->SendCleanCbox->isChecked())
+        fprintf(fp, "[SendClean]=true\n");
+    else
+        fprintf(fp, "[SendClean]=false\n");
+    fclose(fp);
+}
+
+/**
+    * @name		ReadConfigure
+    * @brief  	读取配置文件函数
+  */
+void MainWindow::ReadConfigure()
+{
+    if(QFile(ConfigureFileName).exists())
+    {
+        FILE *fp = fopen(ConfigureFileName, "r");
+
+        if(strcmp(ReadLineChars(fp, 0).toLatin1(), "[Configure]") == 0)
+        {
+            ui->BaudCbox->setCurrentIndex(ReadLineChars(fp, 1).split("=")[1].toInt());
+
+            ui->DataBitCbox->setCurrentIndex(ReadLineChars(fp, 2).split("=")[1].toInt());
+
+            ui->CheckBitCbox->setCurrentIndex(ReadLineChars(fp, 3).split("=")[1].toInt());
+
+            ui->StopBitCbox->setCurrentIndex(ReadLineChars(fp, 4).split("=")[1].toInt());
+
+            if(ReadLineChars(fp, 5).split("=")[1].toLatin1() == "true")
+                ui->HexShowCbox->setChecked(true);
+            else
+                ui->HexShowCbox->setChecked(false);
+            if(ReadLineChars(fp, 6).split("=")[1].toLatin1() == "true")
+                ui->AutoFollowCbox->setChecked(true);
+            else
+                ui->AutoFollowCbox->setChecked(false);
+            if(ReadLineChars(fp, 7).split("=")[1].toLatin1() == "true")
+                ui->TalkWindowCbox->setChecked(true);
+            else
+                ui->TalkWindowCbox->setChecked(false);
+            if(ReadLineChars(fp, 8).split("=")[1].toLatin1() == "true")
+                ui->HexSendCbox->setChecked(true);
+            else
+                ui->HexSendCbox->setChecked(false);
+            if(ReadLineChars(fp, 9).split("=")[1].toLatin1() == "true")
+                ui->EnterSendCBox->setChecked(true);
+            else
+                ui->EnterSendCBox->setChecked(false);
+            if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
+                ui->AutoEnterCBox->setChecked(true);
+            else
+                ui->AutoEnterCBox->setChecked(false);
+            if(ReadLineChars(fp, 11).split("=")[1].toLatin1() == "true")
+                ui->SendCleanCbox->setChecked(true);
+            else
+                ui->SendCleanCbox->setChecked(false);
+        }
+    }
+}
+
+/**
+    * @name		eventFilter
+    * @brief  	事件过滤器
+  */
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if(obj == ui->SendTextEdit)
+    {
+        if(event->type() == QEvent::KeyPress)
+        {
+             QKeyEvent *k = static_cast<QKeyEvent *>(event);
+
+             if(k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)
+             {
+                 if(ui->EnterSendCBox->isChecked())
+                 {
+                    SendData();
+                 }
+                 return true;
+             }
+        }
+    }
+    return false;
 }
 
 /**
@@ -304,7 +532,109 @@ QString ByteArrayToHexString(QByteArray ascii)
 {
     QString ret;
     for(int i = 0; i < ascii.count(); i++)
+    {
         ret.append(QString("%1 ").arg((uchar)ascii.at(i), 2, 16, (QChar)'0'));
-
+    }
     return ret.toUpper();
+}
+
+/**
+    * @name		HexStringToQByteArray
+    * @brief  	Hex字符串转QByteArray
+  */
+QByteArray HexStringToQByteArray(QString str)
+{
+    int hexdata,lowhexdata;
+
+    int hexdatalen = 0;
+
+    int len = str.length();
+
+    QByteArray byteData;
+
+    byteData.resize(len/2);
+
+    char lstr,hstr;
+
+    for(int i = 0; i < len; i++)
+    {
+        hstr=str[i].toLatin1();
+
+        if(hstr == ' ')
+        {
+            i++;
+
+            continue;
+        }
+        i++;
+
+        if(i >= len)
+            break;
+
+        lstr = str[i].toLatin1();
+
+        hexdata = ConvertCharToHex(hstr);
+
+        lowhexdata = ConvertCharToHex(lstr);
+
+        if((hexdata == 16) || (lowhexdata == 16))
+            break;
+        else
+            hexdata = (hexdata << 4) + lowhexdata;
+
+        byteData[hexdatalen] = (char)hexdata;
+
+        hexdatalen++;
+    }
+    byteData.resize(hexdatalen);
+
+    return byteData;
+}
+
+/**
+    * @name		ConvertCharToHex
+    * @brief  	char 转为 16进制
+  */
+char ConvertCharToHex(char ch)
+{
+    /*
+        0x30等于十进制的48，48也是0的ASCII值，，
+        1-9的ASCII值是49-57，，所以某一个值－0x30，，
+        就是将字符0-9转换为0-9
+    */
+    if((ch >= '0') && (ch <= '9'))
+         return ch-0x30;
+     else if((ch >= 'A') && (ch <= 'F'))
+         return ch-'A'+10;
+     else if((ch >= 'a') && (ch <= 'f'))
+         return ch-'a'+10;
+     else return (-1);
+}
+
+/**
+    * @name		ReadLineChars
+    * @brief  	读取目标行文件内容
+  */
+QString ReadLineChars(FILE* fp, uint32_t line)
+{
+    uint32_t i;
+
+    char buf[128];
+
+    for(i = 0; i <= line; i++)
+    {
+        fgets(buf, 128, fp);
+
+        if(i == line)
+        {
+            if(buf[strlen(buf) - 1] == '\n')
+            {
+                buf[strlen(buf) - 1] = '\0';
+            }
+            fseek(fp, 0L,SEEK_SET);
+
+            return QString(buf);
+        }
+    }
+    return "error";
 }

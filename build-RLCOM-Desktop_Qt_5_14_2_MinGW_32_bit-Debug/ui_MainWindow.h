@@ -18,7 +18,6 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSpinBox>
@@ -50,11 +49,14 @@ public:
     QGroupBox *SendGbox;
     QGridLayout *gridLayout_3;
     QPushButton *SendPbtn;
+    QCheckBox *EnterSendCBox;
     QSpinBox *TimeSBox;
     QPushButton *CleanSendPbtn;
+    QCheckBox *AutoEnterCBox;
     QCheckBox *TimeSendCbox;
     QCheckBox *HexSendCbox;
-    QPlainTextEdit *SendPlainTextEdit;
+    QCheckBox *SendCleanCbox;
+    QTextEdit *SendTextEdit;
     QGroupBox *ReceiveGbox;
     QGridLayout *gridLayout_2;
     QCheckBox *HexShowCbox;
@@ -161,33 +163,51 @@ public:
         SendPbtn = new QPushButton(SendGbox);
         SendPbtn->setObjectName(QString::fromUtf8("SendPbtn"));
 
-        gridLayout_3->addWidget(SendPbtn, 1, 4, 1, 1);
+        gridLayout_3->addWidget(SendPbtn, 1, 7, 1, 1);
+
+        EnterSendCBox = new QCheckBox(SendGbox);
+        EnterSendCBox->setObjectName(QString::fromUtf8("EnterSendCBox"));
+
+        gridLayout_3->addWidget(EnterSendCBox, 1, 1, 1, 1);
 
         TimeSBox = new QSpinBox(SendGbox);
         TimeSBox->setObjectName(QString::fromUtf8("TimeSBox"));
+        TimeSBox->setMinimum(1);
+        TimeSBox->setMaximum(5000);
+        TimeSBox->setValue(1);
 
-        gridLayout_3->addWidget(TimeSBox, 1, 2, 1, 1);
+        gridLayout_3->addWidget(TimeSBox, 1, 5, 1, 1);
 
         CleanSendPbtn = new QPushButton(SendGbox);
         CleanSendPbtn->setObjectName(QString::fromUtf8("CleanSendPbtn"));
 
-        gridLayout_3->addWidget(CleanSendPbtn, 1, 3, 1, 1);
+        gridLayout_3->addWidget(CleanSendPbtn, 1, 6, 1, 1);
+
+        AutoEnterCBox = new QCheckBox(SendGbox);
+        AutoEnterCBox->setObjectName(QString::fromUtf8("AutoEnterCBox"));
+
+        gridLayout_3->addWidget(AutoEnterCBox, 1, 2, 1, 1);
 
         TimeSendCbox = new QCheckBox(SendGbox);
         TimeSendCbox->setObjectName(QString::fromUtf8("TimeSendCbox"));
 
-        gridLayout_3->addWidget(TimeSendCbox, 1, 1, 1, 1);
+        gridLayout_3->addWidget(TimeSendCbox, 1, 4, 1, 1);
 
         HexSendCbox = new QCheckBox(SendGbox);
         HexSendCbox->setObjectName(QString::fromUtf8("HexSendCbox"));
 
         gridLayout_3->addWidget(HexSendCbox, 1, 0, 1, 1);
 
-        SendPlainTextEdit = new QPlainTextEdit(SendGbox);
-        SendPlainTextEdit->setObjectName(QString::fromUtf8("SendPlainTextEdit"));
-        SendPlainTextEdit->setReadOnly(false);
+        SendCleanCbox = new QCheckBox(SendGbox);
+        SendCleanCbox->setObjectName(QString::fromUtf8("SendCleanCbox"));
 
-        gridLayout_3->addWidget(SendPlainTextEdit, 0, 0, 1, 5);
+        gridLayout_3->addWidget(SendCleanCbox, 1, 3, 1, 1);
+
+        SendTextEdit = new QTextEdit(SendGbox);
+        SendTextEdit->setObjectName(QString::fromUtf8("SendTextEdit"));
+        SendTextEdit->setAcceptRichText(false);
+
+        gridLayout_3->addWidget(SendTextEdit, 0, 0, 1, 8);
 
 
         gridLayout_4->addWidget(SendGbox, 2, 1, 1, 1);
@@ -273,9 +293,12 @@ public:
         PortLab->setText(QCoreApplication::translate("MainWindow", "\347\253\257  \345\217\243\357\274\232", nullptr));
         SendGbox->setTitle(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201\345\214\272", nullptr));
         SendPbtn->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201", nullptr));
+        EnterSendCBox->setText(QCoreApplication::translate("MainWindow", "\345\233\236\350\275\246\351\224\256\345\217\221\351\200\201", nullptr));
         CleanSendPbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\345\217\221\351\200\201\345\214\272", nullptr));
+        AutoEnterCBox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\345\212\250\346\215\242\350\241\214", nullptr));
         TimeSendCbox->setText(QCoreApplication::translate("MainWindow", "\345\256\232\346\227\266\345\217\221\351\200\201\357\274\210\345\215\225\344\275\215ms\357\274\211", nullptr));
         HexSendCbox->setText(QCoreApplication::translate("MainWindow", "\345\215\201\345\205\255\350\277\233\345\210\266\345\217\221\351\200\201", nullptr));
+        SendCleanCbox->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201\345\220\216\346\270\205\351\231\244", nullptr));
         ReceiveGbox->setTitle(QCoreApplication::translate("MainWindow", "\346\216\245\346\224\266\345\214\272", nullptr));
         HexShowCbox->setText(QCoreApplication::translate("MainWindow", "\345\215\201\345\205\255\350\277\233\345\210\266\346\230\276\347\244\272", nullptr));
         CleanReceivePbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\346\216\245\346\224\266\345\214\272", nullptr));

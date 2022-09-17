@@ -13,10 +13,14 @@
 /*  @include  */
 #include <QDebug>
 #include <QTimer>
+#include <QKeyEvent>
 #include <QtWidgets/QLabel>
 #include <QSerialPortInfo>
 #include <QMainWindow>
 #include <QSerialPort>
+
+/* @define MAX_BAUDLIST */
+#define ConfigureFileName "ConfigureFile.ini"
 
 /* @define MAX_BAUDLIST */
 #define MAX_BAUDLIST 17
@@ -63,29 +67,31 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    bool SwitchPortFlag = false;
+    bool SwitchPortFlag = false;        /* 端口开启状态 */
 
-    uint32_t ReceiveCount = 0;
+    uint32_t ReceiveCount = 0;          /* 接收数据量 */
 
-    uint32_t ReceiveLastCount = 0;
+    uint32_t ReceiveLastCount = 0;      /* 上一次接收数据量 */
 
-    uint32_t ReceiveSpeed = 0;
+    uint32_t ReceiveSpeed = 0;          /* 接收速度 */
 
-    uint32_t SendCount = 0;
+    uint32_t SendCount = 0;             /* 发送数据量 */
 
-    QSerialPort Ser;
+    QSerialPort Ser;                    /* 串口对象*/
 
-    QString NowTime;
+    QString NowTime;                    /* 当前时间 */
 
-    QStringList PortList;
+    QStringList PortList;               /* 端口列表 */
 
-    QLabel* TimeLab;
+    QLabel* TimeLab;                    /* 当前时间Label */
 
-    QLabel* DataLab;
+    QLabel* DataLab;                    /* 数据信息Label */
 
-    QTimer RefreshPortTimer;
+    QTimer AutoSendTimer;               /* 定时发送定时器 */
 
-    QTimer UpdateTimeTimer;
+    QTimer RefreshPortTimer;            /* 刷新串口定时器 10Hz */
+
+    QTimer UpdateTimeTimer;             /* 更新时间定时器 1Hz */
 
 public slots:
     void RefreshPort();
@@ -96,7 +102,19 @@ public slots:
 
     void CleanStats();
 
+    void CleanSendData();
+
     void ReceiveData();
+
+    void SendData();
+
+    void AutoSend(int state);
+
+    void WriteConfigure();
+
+    void ReadConfigure();
+
+    bool eventFilter(QObject *obj, QEvent *event);
 
     void UpdateTime();
 
@@ -104,5 +122,13 @@ public slots:
 };
 
 QString ByteArrayToHexString(QByteArray ascii);
+
+QByteArray StringToQByteArray(QString str);
+
+QByteArray HexStringToQByteArray(QString str);
+
+char ConvertCharToHex(char ch);
+
+QString ReadLineChars(FILE* fp, uint32_t line);
 
 #endif // MAINWINDOW_H
