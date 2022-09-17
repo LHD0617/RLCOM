@@ -31,8 +31,23 @@ int main(int argc, char *argv[])
 
     if(shared_memory.create(1))
     {
+
         MainWindow ui;
 
+        QFile file("blacksoft.css");
+
+        if(file.open(QFile::ReadOnly))
+        {
+            QString qss = QLatin1String(file.readAll());
+
+            QString paletteColor = qss.mid(20, 7);
+
+            ui.setPalette(QPalette(QColor(paletteColor)));
+
+            ui.setStyleSheet(qss);
+
+            file.close();
+        }
         ui.show();
 
         return app.exec();
