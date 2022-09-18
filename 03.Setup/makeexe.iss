@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "RLCOM"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "ÂúÐÄ»¶Ï²"
 #define MyAppExeName "RLCOM.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputDir=D:\Users\86156\OneDrive\×ÀÃæ
 OutputBaseFilename=RLCOM_Setup
-SetupIconFile=D:\Qt5\Project\RLCOM\RLCOM\logo.ico
+SetupIconFile=D:\Qt5\Project\RLCOM\01.RLCOM\logo.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -37,8 +37,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Qt5\Project\RLCOM\build-RLCOM-Desktop_Qt_5_14_2_MinGW_32_bit-Release\release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Qt5\Project\RLCOM\build-RLCOM-Desktop_Qt_5_14_2_MinGW_32_bit-Release\release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Qt5\Project\RLCOM\makeexe\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Qt5\Project\RLCOM\makeexe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
