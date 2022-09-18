@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
         MainWindow ui;
 
-        QFile file("blacksoft.css");
+        QFile file("flatgray.css");
 
         if(file.open(QFile::ReadOnly))
         {

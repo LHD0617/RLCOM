@@ -38,27 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     UpdateTime();
 
-    for(uint8_t i = 0; i < MAX_BAUDLIST; i++)
-    {
-        ui->BaudCbox->addItem(BaudList[i]);
-    }
     ui->BaudCbox->setCurrentIndex(4);
 
-    for(uint8_t i = 0; i < 4; i++)
-    {
-        ui->DataBitCbox->addItem(DataBitList[i]);
-    }
     ui->DataBitCbox->setCurrentIndex(3);
 
-    for(uint8_t i = 0; i < 3; i++)
-    {
-        ui->CheckBitCbox->addItem(CheckBitList[i]);
-    }
-
-    for(uint8_t i = 0; i < 3; i++)
-    {
-        ui->StopBitCbox->addItem(StopBitList[i]);
-    }
     ui->HeightLedit->setValidator(new QIntValidator(0, 999, this));
 
     ui->WidthLedit->setValidator(new QIntValidator(0, 999, this));

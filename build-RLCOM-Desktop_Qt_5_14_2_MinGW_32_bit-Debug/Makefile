@@ -251,6 +251,7 @@ Makefile: ../01.RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win3
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/yacc.prf \
 		../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/lex.prf \
 		../01.RLCOM/RLCOM.pro \
+		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5PrintSupport.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Widgets.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl \
 		../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5SerialPort.prl \
@@ -440,6 +441,7 @@ Makefile: ../01.RLCOM/RLCOM.pro ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/win3
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/yacc.prf:
 ../../../Qt5.14.2/5.14.2/mingw73_32/mkspecs/features/lex.prf:
 ../01.RLCOM/RLCOM.pro:
+../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5PrintSupport.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Widgets.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5Gui.prl:
 ../../../Qt5.14.2/5.14.2/mingw73_32/lib/Qt5SerialPort.prl:

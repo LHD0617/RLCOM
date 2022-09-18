@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
+    <width>1200</width>
     <height>800</height>
    </rect>
   </property>
@@ -53,7 +53,7 @@
     <item row="0" column="1" rowspan="2">
      <widget class="QTabWidget" name="TabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Tab1">
        <attribute name="title">
@@ -338,6 +338,193 @@
        <attribute name="title">
         <string>虚拟示波</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0" rowspan="2">
+         <widget class="QGroupBox" name="WaveformConfigure">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>波形配置</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <property name="verticalSpacing">
+            <number>20</number>
+           </property>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="DataTypeCbox">
+             <item>
+              <property name="text">
+               <string>uint8</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>uint16</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>uint32</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>int8</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>int16</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>int32</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>float</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>double</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="ChannleSbox">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>8</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="SwitchWaveformPbtn">
+             <property name="text">
+              <string>开始接收</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="DataTypeLab">
+             <property name="text">
+              <string>数据类型：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="ChannleLab">
+             <property name="text">
+              <string>通道数：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="ChartConfigure">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>图表配置</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="YaxisZoomPbtn">
+             <property name="text">
+              <string>Y轴放大</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QCheckBox" name="ChartAutoFollowCbox">
+             <property name="text">
+              <string>自动跟踪</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="XaxisZoomPbtn">
+             <property name="text">
+              <string>X轴放大</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QCheckBox" name="AdaptiveCbox">
+             <property name="text">
+              <string>自适应窗口</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="XaxisShrinkPbtn">
+             <property name="text">
+              <string>X轴缩小</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="YaxisShrinkPbtn">
+             <property name="text">
+              <string>Y轴缩小</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="YaxisZeroPbtn">
+             <property name="text">
+              <string>Y轴归0</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCustomPlot" name="ChartWidget" native="true"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -380,7 +567,93 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="BaudCbox"/>
+        <widget class="QComboBox" name="BaudCbox">
+         <item>
+          <property name="text">
+           <string>9600</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>19200</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>38400</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>57600</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>115200</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>460800</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>500000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>576000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>921600</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1000000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1152000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1500000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2000000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2500000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3000000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3500000</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4000000</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="CheckBitLab">
@@ -390,16 +663,69 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QComboBox" name="DataBitCbox"/>
+        <widget class="QComboBox" name="DataBitCbox">
+         <item>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>6</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>7</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>8</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QComboBox" name="CheckBitCbox"/>
+        <widget class="QComboBox" name="CheckBitCbox">
+         <item>
+          <property name="text">
+           <string>无校验</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>偶校验</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>奇校验</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="0" column="1">
         <widget class="QComboBox" name="PortCbox"/>
        </item>
        <item row="4" column="1">
-        <widget class="QComboBox" name="StopBitCbox"/>
+        <widget class="QComboBox" name="StopBitCbox">
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1.5</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="StopBitLab">
@@ -442,6 +768,14 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ICON/icon.qrc"/>
  </resources>
