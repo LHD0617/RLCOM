@@ -1,7 +1,7 @@
 /*
  * Copyright (C), 1988-1999, Xxxxxx Tech. Co., Ltd.
- * FileName: MainWindow.h
- * Description: 主窗口头文件
+ * FileName: MainWindow.cpp
+ * Description: 主窗口
  * Change Logs:
   |Date          |Author       |Notes     			|version
   |2022-09-17    |满心欢喜     |Initial build     	|1.0.0
@@ -10,6 +10,7 @@
 /*  @include  */
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+
 
 
 /**
@@ -46,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->WidthLedit->setValidator(new QIntValidator(0, 999, this));
 
+    ui->ChartWidget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+
     ReadConfigure();
 
     connect(ui->SwitchPortPbtn, SIGNAL(clicked()), this, SLOT(SwitchPort()));
@@ -59,6 +62,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->SendPbtn, SIGNAL(clicked()), this, SLOT(SendData()));
 
     connect(ui->SwitchImagePbtn, SIGNAL(clicked()), this, SLOT(SwitchImage()));
+
+    connect(ui->SwitchWaveformPbtn, SIGNAL(clicked()), this, SLOT(SwitchChart()));
+
+    connect(ui->XaxisZoomPbtn, SIGNAL(clicked()), this, SLOT(XAxisZoom()));
+
+    connect(ui->XaxisShrinkPbtn, SIGNAL(clicked()), this, SLOT(XAxisShrink()));
 
     connect(ui->TimeSendCbox, SIGNAL(stateChanged(int)), this, SLOT(AutoSend(int)));
 
@@ -314,6 +323,87 @@ void MainWindow::SwitchImage()
 }
 
 /**
+    * @name		SwitchChart
+    * @brief  	开关波形传输
+  */
+void MainWindow::SwitchChart()
+{
+    if(!SwitchChartFlag)
+    {
+        if(SwitchPortFlag)
+        {
+            Channle = ui->ChannleSbox->text().toInt();
+
+            DataType = ui->DataTypeCbox->currentIndex();
+
+            if(DataType > 5)
+            {
+                ChartDataSize = (DataType - 5) * 4 * Channle;
+            }
+            else
+            {
+                ChartDataSize = ((DataType % 3) + 1) * Channle;
+            }
+            QHBoxLayout* Layout = new QHBoxLayout();
+
+            QWidget* ChartLabWidget = new QWidget();
+
+            for(uint8_t i = 0; i < Channle; i++)
+            {
+                ui->ChartWidget->addGraph();
+
+                ChartLabel[i] = new UnitChartLabel(ChartGraphColor[i]);
+
+                Layout->addWidget(ChartLabel[i]);
+
+                ui->ChartWidget->graph(i)->setPen(QPen(ChartGraphColor[i]));
+            }
+            ChartLabWidget->setLayout(Layout);
+
+            ui->gridLayout_6->addWidget(ChartLabWidget, 1, 0, 1, 4);
+
+            ui->ChartWidget->replot();
+
+            ui->SwitchWaveformPbtn->setText("停止接收");
+
+            ui->ChannleSbox->setEnabled(false);
+
+            ui->DataTypeCbox->setEnabled(false);
+
+            SwitchChartFlag = true;
+        }
+        else
+        {
+            ShowMessage("请先打开串口");
+        }
+    }
+    else
+    {
+        ChartHeadFlag = false;
+
+        ChartCount = 0;
+
+        ui->ChartWidget->clearGraphs();
+
+        ui->ChartWidget->replot();
+
+        auto ChartLabWidget = ui->gridLayout_6->itemAtPosition(1, 0);
+
+        ChartLabWidget->widget()->setVisible(false);
+
+        ui->gridLayout_6->removeWidget(ChartLabWidget->widget());
+
+        ui->SwitchWaveformPbtn->setText("开始接收");
+
+        ui->ChannleSbox->setEnabled(true);
+
+        ui->DataTypeCbox->setEnabled(true);
+
+        SwitchChartFlag = false;
+    }
+}
+
+/**
     * @name		ReceiveData
     * @brief  	接收数据函数
   */
@@ -390,9 +480,103 @@ void MainWindow::ReceiveData()
         }
     }
     /* 虚拟示波 */
-    if(ui->TabWidget->currentIndex() == 0)
+    if(ui->TabWidget->currentIndex() == 2)
     {
+        if(SwitchChartFlag)
+        {
+            if(!ChartHeadFlag)
+            {
+                for(int i = 0; i < Data.size(); i++)
+                {
+                    if((uint8_t)Data[i] != ChartHeadData[ChartHeadLen])
+                    {
+                        ChartHeadLen = 0;
+                    }
+                    if((uint8_t)Data[i] == ChartHeadData[ChartHeadLen])
+                    {
+                        ChartHeadLen++;
+                    }
+                    else
+                    {
+                        ChartHeadLen = 0;
+                    }
+                    if(ChartHeadLen == 4)
+                    {
+                        ChartHeadFlag = true;
 
+                        ChartHeadLen = 0;
+
+                        UartData.append(Data.mid(i + 1));
+
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                UartData.append(Data);
+
+                if(UartData.size() >= (int)ChartDataSize)
+                {
+                    double dat;
+
+                    uint8_t UnitChannleSize = ChartDataSize / Channle;
+
+                    for(uint8_t i = 0; i < Channle; i++)
+                    {
+                        switch(ui->DataTypeCbox->currentIndex())
+                        {
+                        case 0:
+                            dat = *((uint8_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 1:
+                            dat = *((uint16_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 2:
+                            dat = *((uint32_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 3:
+                            dat = *((int8_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 4:
+                            dat = *((int16_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 5:
+                            dat = *((int32_t*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 6:
+                            dat = *((float*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        case 7:
+                            dat = *((double*)(UartData.data() + i * UnitChannleSize));
+                        break;
+                        }
+                        ui->ChartWidget->graph(i)->addData(ChartCount, dat);
+
+                        ChartLabel[i]->Label->setText(QString("%1").arg(dat));
+
+                        if(ui->AdaptiveCbox->isChecked())
+                        {
+                            ui->ChartWidget->graph(i)->rescaleValueAxis(true);
+                        }
+                        ui->ChartWidget->graph(i)->setVisible(ChartLabel[i]->CheckBox->isChecked());
+                    }
+                    uint32_t temp = ui->ChartWidget->graph(0)->dataCount();
+
+                    if(ui->ChartAutoFollowCbox->isChecked())
+                    {
+                        ui->ChartWidget->xAxis->setRange(temp > ChartXRange ? temp - ChartXRange : 0, ChartXRange > temp ? ChartXRange : temp);
+                    }
+                    ui->ChartWidget->replot(QCustomPlot::rpQueuedReplot);
+
+                    ChartCount++;
+
+                    UartData.clear();
+
+                    ChartHeadFlag = false;
+                }
+            }
+        }
     }
     ReceiveCount += Data.size();
 }
@@ -499,6 +683,10 @@ void MainWindow::WriteConfigure()
 
     fprintf(fp, QString("[ImageMode]=%1\n").arg(ui->ImageModeCBox->currentIndex()).toLatin1());
 
+    fprintf(fp, QString("[Channle]=%1\n").arg(ui->ChannleSbox->text()).toLatin1());
+
+    fprintf(fp, QString("[DataType]=%1\n").arg(ui->DataTypeCbox->currentIndex()).toLatin1());
+
     fprintf(fp, QString("[Height]=%1\n").arg(ui->HeightLedit->text().toInt()).toLatin1());
 
     fprintf(fp, QString("[Width]=%1\n").arg(ui->WidthLedit->text().toInt()).toLatin1());
@@ -535,6 +723,14 @@ void MainWindow::WriteConfigure()
         fprintf(fp, "[ImageGrid]=true\n");
     else
         fprintf(fp, "[ImageGrid]=false\n");
+    if(ui->AdaptiveCbox->isChecked())
+        fprintf(fp, "[Adaptive]=true\n");
+    else
+        fprintf(fp, "[Adaptive]=false\n");
+    if(ui->ChartAutoFollowCbox->isChecked())
+        fprintf(fp, "[AutoFollow]=true\n");
+    else
+        fprintf(fp, "[AutoFollow]=false\n");
     fclose(fp);
 }
 
@@ -560,42 +756,54 @@ void MainWindow::ReadConfigure()
 
             ui->ImageModeCBox->setCurrentIndex(ReadLineChars(fp, 5).split("=")[1].toInt());
 
-            ui->HeightLedit->setText(ReadLineChars(fp, 6).split("=")[1]);
+            ui->ChannleSbox->setValue(ReadLineChars(fp, 6).split("=")[1].toInt());
 
-            ui->WidthLedit->setText(ReadLineChars(fp, 7).split("=")[1]);
+            ui->DataTypeCbox->setCurrentIndex(ReadLineChars(fp, 7).split("=")[1].toInt());
 
-            if(ReadLineChars(fp, 8).split("=")[1].toLatin1() == "true")
+            ui->HeightLedit->setText(ReadLineChars(fp, 8).split("=")[1]);
+
+            ui->WidthLedit->setText(ReadLineChars(fp, 9).split("=")[1]);
+
+            if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
                 ui->HexShowCbox->setChecked(true);
             else
                 ui->HexShowCbox->setChecked(false);
-            if(ReadLineChars(fp, 9).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 11).split("=")[1].toLatin1() == "true")
                 ui->AutoFollowCbox->setChecked(true);
             else
                 ui->AutoFollowCbox->setChecked(false);
-            if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 12).split("=")[1].toLatin1() == "true")
                 ui->TalkWindowCbox->setChecked(true);
             else
                 ui->TalkWindowCbox->setChecked(false);
-            if(ReadLineChars(fp, 11).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 13).split("=")[1].toLatin1() == "true")
                 ui->HexSendCbox->setChecked(true);
             else
                 ui->HexSendCbox->setChecked(false);
-            if(ReadLineChars(fp, 12).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 14).split("=")[1].toLatin1() == "true")
                 ui->EnterSendCBox->setChecked(true);
             else
                 ui->EnterSendCBox->setChecked(false);
-            if(ReadLineChars(fp, 13).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 15).split("=")[1].toLatin1() == "true")
                 ui->AutoEnterCBox->setChecked(true);
             else
                 ui->AutoEnterCBox->setChecked(false);
-            if(ReadLineChars(fp, 14).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 16).split("=")[1].toLatin1() == "true")
                 ui->SendCleanCbox->setChecked(true);
             else
                 ui->SendCleanCbox->setChecked(false);
-            if(ReadLineChars(fp, 15).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 17).split("=")[1].toLatin1() == "true")
                 ui->GridCbox->setChecked(true);
             else
                 ui->GridCbox->setChecked(false);
+            if(ReadLineChars(fp, 18).split("=")[1].toLatin1() == "true")
+                ui->AdaptiveCbox->setChecked(true);
+            else
+                ui->AdaptiveCbox->setChecked(false);
+            if(ReadLineChars(fp, 19).split("=")[1].toLatin1() == "true")
+                ui->ChartAutoFollowCbox->setChecked(true);
+            else
+                ui->ChartAutoFollowCbox->setChecked(false);
         }
     }
 }
@@ -685,6 +893,30 @@ QImage MainWindow::MakeImage()
     UartData.clear();
 
     return QImage((const unsigned char *)ImageData.data(), Width * PIXEL_SIZE, Height * PIXEL_SIZE, Width * PIXEL_SIZE, QImage::Format_Grayscale8);
+}
+
+/**
+    * @name		XAxisShrink
+    * @brief  	X轴缩小
+  */
+void MainWindow::XAxisShrink()
+{
+    if(ChartXRange + 50 <= MAX_X_AXIS)
+    {
+        ChartXRange += 50;
+    }
+}
+
+/**
+    * @name		XAxisShrink
+    * @brief  	X轴放大
+  */
+void MainWindow::XAxisZoom()
+{
+    if(ChartXRange - 50 >= MIN_X_AXIS)
+    {
+        ChartXRange -= 50;
+    }
 }
 
 /**

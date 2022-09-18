@@ -38,16 +38,30 @@ public:
     QWidget *centralwidget;
     QGridLayout *gridLayout_4;
     QLabel *LogoLab;
+    QGroupBox *ProtConfigure;
+    QGridLayout *gridLayout;
+    QComboBox *CheckBitCbox;
+    QSpacerItem *verticalSpacer;
+    QLabel *BaudLab;
+    QPushButton *SwitchPortPbtn;
+    QComboBox *StopBitCbox;
+    QComboBox *BaudCbox;
+    QLabel *CheckBitLab;
+    QComboBox *DataBitCbox;
+    QComboBox *PortCbox;
+    QLabel *StopBitLab;
+    QLabel *DataBitLab;
+    QLabel *PortLab;
+    QPushButton *CleanStatsPbtn;
     QTabWidget *TabWidget;
     QWidget *Tab1;
     QVBoxLayout *verticalLayout;
     QGroupBox *ReceiveGbox;
     QGridLayout *gridLayout_2;
     QCheckBox *HexShowCbox;
-    QPushButton *CleanReceivePbtn;
-    QCheckBox *TalkWindowCbox;
-    QPushButton *CleanStatsPbtn;
     QCheckBox *AutoFollowCbox;
+    QCheckBox *TalkWindowCbox;
+    QPushButton *CleanReceivePbtn;
     QTextEdit *ReceiveTextEdit;
     QGroupBox *SendGbox;
     QGridLayout *gridLayout_3;
@@ -77,6 +91,7 @@ public:
     QLabel *ImageLab;
     QWidget *Tab3;
     QGridLayout *gridLayout_7;
+    QCustomPlot *ChartWidget;
     QGroupBox *WaveformConfigure;
     QGridLayout *gridLayout_8;
     QComboBox *DataTypeCbox;
@@ -87,28 +102,10 @@ public:
     QSpacerItem *verticalSpacer_3;
     QGroupBox *ChartConfigure;
     QGridLayout *gridLayout_6;
-    QPushButton *YaxisZoomPbtn;
+    QCheckBox *AdaptiveCbox;
     QCheckBox *ChartAutoFollowCbox;
     QPushButton *XaxisZoomPbtn;
-    QCheckBox *AdaptiveCbox;
     QPushButton *XaxisShrinkPbtn;
-    QPushButton *YaxisShrinkPbtn;
-    QPushButton *YaxisZeroPbtn;
-    QCustomPlot *ChartWidget;
-    QGroupBox *ProtConfigure;
-    QGridLayout *gridLayout;
-    QLabel *DataBitLab;
-    QLabel *BaudLab;
-    QComboBox *BaudCbox;
-    QLabel *CheckBitLab;
-    QComboBox *DataBitCbox;
-    QComboBox *CheckBitCbox;
-    QComboBox *PortCbox;
-    QComboBox *StopBitCbox;
-    QLabel *StopBitLab;
-    QPushButton *SwitchPortPbtn;
-    QLabel *PortLab;
-    QSpacerItem *verticalSpacer;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -138,6 +135,108 @@ public:
 
         gridLayout_4->addWidget(LogoLab, 0, 0, 1, 1);
 
+        ProtConfigure = new QGroupBox(centralwidget);
+        ProtConfigure->setObjectName(QString::fromUtf8("ProtConfigure"));
+        ProtConfigure->setMinimumSize(QSize(200, 0));
+        ProtConfigure->setMaximumSize(QSize(200, 16777215));
+        gridLayout = new QGridLayout(ProtConfigure);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setHorizontalSpacing(6);
+        gridLayout->setVerticalSpacing(20);
+        CheckBitCbox = new QComboBox(ProtConfigure);
+        CheckBitCbox->addItem(QString());
+        CheckBitCbox->addItem(QString());
+        CheckBitCbox->addItem(QString());
+        CheckBitCbox->setObjectName(QString::fromUtf8("CheckBitCbox"));
+
+        gridLayout->addWidget(CheckBitCbox, 3, 1, 1, 1);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer, 7, 0, 1, 2);
+
+        BaudLab = new QLabel(ProtConfigure);
+        BaudLab->setObjectName(QString::fromUtf8("BaudLab"));
+
+        gridLayout->addWidget(BaudLab, 1, 0, 1, 1);
+
+        SwitchPortPbtn = new QPushButton(ProtConfigure);
+        SwitchPortPbtn->setObjectName(QString::fromUtf8("SwitchPortPbtn"));
+
+        gridLayout->addWidget(SwitchPortPbtn, 5, 0, 1, 2);
+
+        StopBitCbox = new QComboBox(ProtConfigure);
+        StopBitCbox->addItem(QString());
+        StopBitCbox->addItem(QString());
+        StopBitCbox->addItem(QString());
+        StopBitCbox->setObjectName(QString::fromUtf8("StopBitCbox"));
+
+        gridLayout->addWidget(StopBitCbox, 4, 1, 1, 1);
+
+        BaudCbox = new QComboBox(ProtConfigure);
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->addItem(QString());
+        BaudCbox->setObjectName(QString::fromUtf8("BaudCbox"));
+
+        gridLayout->addWidget(BaudCbox, 1, 1, 1, 1);
+
+        CheckBitLab = new QLabel(ProtConfigure);
+        CheckBitLab->setObjectName(QString::fromUtf8("CheckBitLab"));
+
+        gridLayout->addWidget(CheckBitLab, 3, 0, 1, 1);
+
+        DataBitCbox = new QComboBox(ProtConfigure);
+        DataBitCbox->addItem(QString());
+        DataBitCbox->addItem(QString());
+        DataBitCbox->addItem(QString());
+        DataBitCbox->addItem(QString());
+        DataBitCbox->setObjectName(QString::fromUtf8("DataBitCbox"));
+
+        gridLayout->addWidget(DataBitCbox, 2, 1, 1, 1);
+
+        PortCbox = new QComboBox(ProtConfigure);
+        PortCbox->setObjectName(QString::fromUtf8("PortCbox"));
+
+        gridLayout->addWidget(PortCbox, 0, 1, 1, 1);
+
+        StopBitLab = new QLabel(ProtConfigure);
+        StopBitLab->setObjectName(QString::fromUtf8("StopBitLab"));
+
+        gridLayout->addWidget(StopBitLab, 4, 0, 1, 1);
+
+        DataBitLab = new QLabel(ProtConfigure);
+        DataBitLab->setObjectName(QString::fromUtf8("DataBitLab"));
+
+        gridLayout->addWidget(DataBitLab, 2, 0, 1, 1);
+
+        PortLab = new QLabel(ProtConfigure);
+        PortLab->setObjectName(QString::fromUtf8("PortLab"));
+
+        gridLayout->addWidget(PortLab, 0, 0, 1, 1);
+
+        CleanStatsPbtn = new QPushButton(ProtConfigure);
+        CleanStatsPbtn->setObjectName(QString::fromUtf8("CleanStatsPbtn"));
+
+        gridLayout->addWidget(CleanStatsPbtn, 6, 0, 1, 2);
+
+
+        gridLayout_4->addWidget(ProtConfigure, 1, 0, 1, 1);
+
         TabWidget = new QTabWidget(centralwidget);
         TabWidget->setObjectName(QString::fromUtf8("TabWidget"));
         Tab1 = new QWidget();
@@ -158,25 +257,20 @@ public:
 
         gridLayout_2->addWidget(HexShowCbox, 1, 0, 1, 1);
 
-        CleanReceivePbtn = new QPushButton(ReceiveGbox);
-        CleanReceivePbtn->setObjectName(QString::fromUtf8("CleanReceivePbtn"));
+        AutoFollowCbox = new QCheckBox(ReceiveGbox);
+        AutoFollowCbox->setObjectName(QString::fromUtf8("AutoFollowCbox"));
 
-        gridLayout_2->addWidget(CleanReceivePbtn, 1, 3, 1, 1);
+        gridLayout_2->addWidget(AutoFollowCbox, 1, 1, 1, 1);
 
         TalkWindowCbox = new QCheckBox(ReceiveGbox);
         TalkWindowCbox->setObjectName(QString::fromUtf8("TalkWindowCbox"));
 
         gridLayout_2->addWidget(TalkWindowCbox, 1, 2, 1, 1);
 
-        CleanStatsPbtn = new QPushButton(ReceiveGbox);
-        CleanStatsPbtn->setObjectName(QString::fromUtf8("CleanStatsPbtn"));
+        CleanReceivePbtn = new QPushButton(ReceiveGbox);
+        CleanReceivePbtn->setObjectName(QString::fromUtf8("CleanReceivePbtn"));
 
-        gridLayout_2->addWidget(CleanStatsPbtn, 1, 4, 1, 1);
-
-        AutoFollowCbox = new QCheckBox(ReceiveGbox);
-        AutoFollowCbox->setObjectName(QString::fromUtf8("AutoFollowCbox"));
-
-        gridLayout_2->addWidget(AutoFollowCbox, 1, 1, 1, 1);
+        gridLayout_2->addWidget(CleanReceivePbtn, 1, 3, 1, 1);
 
         ReceiveTextEdit = new QTextEdit(ReceiveGbox);
         ReceiveTextEdit->setObjectName(QString::fromUtf8("ReceiveTextEdit"));
@@ -184,7 +278,7 @@ public:
         ReceiveTextEdit->setReadOnly(true);
         ReceiveTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 
-        gridLayout_2->addWidget(ReceiveTextEdit, 0, 0, 1, 5);
+        gridLayout_2->addWidget(ReceiveTextEdit, 0, 0, 1, 4);
 
 
         verticalLayout->addWidget(ReceiveGbox);
@@ -327,6 +421,11 @@ public:
         Tab3->setObjectName(QString::fromUtf8("Tab3"));
         gridLayout_7 = new QGridLayout(Tab3);
         gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
+        ChartWidget = new QCustomPlot(Tab3);
+        ChartWidget->setObjectName(QString::fromUtf8("ChartWidget"));
+
+        gridLayout_7->addWidget(ChartWidget, 1, 1, 1, 1);
+
         WaveformConfigure = new QGroupBox(Tab3);
         WaveformConfigure->setObjectName(QString::fromUtf8("WaveformConfigure"));
         WaveformConfigure->setMinimumSize(QSize(200, 0));
@@ -378,153 +477,38 @@ public:
 
         ChartConfigure = new QGroupBox(Tab3);
         ChartConfigure->setObjectName(QString::fromUtf8("ChartConfigure"));
-        ChartConfigure->setMinimumSize(QSize(0, 100));
-        ChartConfigure->setMaximumSize(QSize(16777215, 100));
+        ChartConfigure->setMinimumSize(QSize(0, 140));
+        ChartConfigure->setMaximumSize(QSize(16777215, 140));
         gridLayout_6 = new QGridLayout(ChartConfigure);
         gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
-        YaxisZoomPbtn = new QPushButton(ChartConfigure);
-        YaxisZoomPbtn->setObjectName(QString::fromUtf8("YaxisZoomPbtn"));
+        AdaptiveCbox = new QCheckBox(ChartConfigure);
+        AdaptiveCbox->setObjectName(QString::fromUtf8("AdaptiveCbox"));
+        AdaptiveCbox->setChecked(false);
 
-        gridLayout_6->addWidget(YaxisZoomPbtn, 0, 0, 1, 1);
+        gridLayout_6->addWidget(AdaptiveCbox, 0, 0, 1, 1);
 
         ChartAutoFollowCbox = new QCheckBox(ChartConfigure);
         ChartAutoFollowCbox->setObjectName(QString::fromUtf8("ChartAutoFollowCbox"));
+        ChartAutoFollowCbox->setChecked(false);
 
-        gridLayout_6->addWidget(ChartAutoFollowCbox, 0, 6, 1, 1);
+        gridLayout_6->addWidget(ChartAutoFollowCbox, 0, 1, 1, 1);
 
         XaxisZoomPbtn = new QPushButton(ChartConfigure);
         XaxisZoomPbtn->setObjectName(QString::fromUtf8("XaxisZoomPbtn"));
 
-        gridLayout_6->addWidget(XaxisZoomPbtn, 0, 3, 1, 1);
-
-        AdaptiveCbox = new QCheckBox(ChartConfigure);
-        AdaptiveCbox->setObjectName(QString::fromUtf8("AdaptiveCbox"));
-
-        gridLayout_6->addWidget(AdaptiveCbox, 0, 5, 1, 1);
+        gridLayout_6->addWidget(XaxisZoomPbtn, 0, 2, 1, 1);
 
         XaxisShrinkPbtn = new QPushButton(ChartConfigure);
         XaxisShrinkPbtn->setObjectName(QString::fromUtf8("XaxisShrinkPbtn"));
 
-        gridLayout_6->addWidget(XaxisShrinkPbtn, 0, 4, 1, 1);
-
-        YaxisShrinkPbtn = new QPushButton(ChartConfigure);
-        YaxisShrinkPbtn->setObjectName(QString::fromUtf8("YaxisShrinkPbtn"));
-
-        gridLayout_6->addWidget(YaxisShrinkPbtn, 0, 1, 1, 1);
-
-        YaxisZeroPbtn = new QPushButton(ChartConfigure);
-        YaxisZeroPbtn->setObjectName(QString::fromUtf8("YaxisZeroPbtn"));
-
-        gridLayout_6->addWidget(YaxisZeroPbtn, 0, 2, 1, 1);
+        gridLayout_6->addWidget(XaxisShrinkPbtn, 0, 3, 1, 1);
 
 
         gridLayout_7->addWidget(ChartConfigure, 0, 1, 1, 1);
 
-        ChartWidget = new QCustomPlot(Tab3);
-        ChartWidget->setObjectName(QString::fromUtf8("ChartWidget"));
-
-        gridLayout_7->addWidget(ChartWidget, 1, 1, 1, 1);
-
         TabWidget->addTab(Tab3, QString());
 
         gridLayout_4->addWidget(TabWidget, 0, 1, 2, 1);
-
-        ProtConfigure = new QGroupBox(centralwidget);
-        ProtConfigure->setObjectName(QString::fromUtf8("ProtConfigure"));
-        ProtConfigure->setMinimumSize(QSize(200, 0));
-        ProtConfigure->setMaximumSize(QSize(200, 16777215));
-        gridLayout = new QGridLayout(ProtConfigure);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        gridLayout->setHorizontalSpacing(6);
-        gridLayout->setVerticalSpacing(20);
-        DataBitLab = new QLabel(ProtConfigure);
-        DataBitLab->setObjectName(QString::fromUtf8("DataBitLab"));
-
-        gridLayout->addWidget(DataBitLab, 2, 0, 1, 1);
-
-        BaudLab = new QLabel(ProtConfigure);
-        BaudLab->setObjectName(QString::fromUtf8("BaudLab"));
-
-        gridLayout->addWidget(BaudLab, 1, 0, 1, 1);
-
-        BaudCbox = new QComboBox(ProtConfigure);
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->addItem(QString());
-        BaudCbox->setObjectName(QString::fromUtf8("BaudCbox"));
-
-        gridLayout->addWidget(BaudCbox, 1, 1, 1, 1);
-
-        CheckBitLab = new QLabel(ProtConfigure);
-        CheckBitLab->setObjectName(QString::fromUtf8("CheckBitLab"));
-
-        gridLayout->addWidget(CheckBitLab, 3, 0, 1, 1);
-
-        DataBitCbox = new QComboBox(ProtConfigure);
-        DataBitCbox->addItem(QString());
-        DataBitCbox->addItem(QString());
-        DataBitCbox->addItem(QString());
-        DataBitCbox->addItem(QString());
-        DataBitCbox->setObjectName(QString::fromUtf8("DataBitCbox"));
-
-        gridLayout->addWidget(DataBitCbox, 2, 1, 1, 1);
-
-        CheckBitCbox = new QComboBox(ProtConfigure);
-        CheckBitCbox->addItem(QString());
-        CheckBitCbox->addItem(QString());
-        CheckBitCbox->addItem(QString());
-        CheckBitCbox->setObjectName(QString::fromUtf8("CheckBitCbox"));
-
-        gridLayout->addWidget(CheckBitCbox, 3, 1, 1, 1);
-
-        PortCbox = new QComboBox(ProtConfigure);
-        PortCbox->setObjectName(QString::fromUtf8("PortCbox"));
-
-        gridLayout->addWidget(PortCbox, 0, 1, 1, 1);
-
-        StopBitCbox = new QComboBox(ProtConfigure);
-        StopBitCbox->addItem(QString());
-        StopBitCbox->addItem(QString());
-        StopBitCbox->addItem(QString());
-        StopBitCbox->setObjectName(QString::fromUtf8("StopBitCbox"));
-
-        gridLayout->addWidget(StopBitCbox, 4, 1, 1, 1);
-
-        StopBitLab = new QLabel(ProtConfigure);
-        StopBitLab->setObjectName(QString::fromUtf8("StopBitLab"));
-
-        gridLayout->addWidget(StopBitLab, 4, 0, 1, 1);
-
-        SwitchPortPbtn = new QPushButton(ProtConfigure);
-        SwitchPortPbtn->setObjectName(QString::fromUtf8("SwitchPortPbtn"));
-
-        gridLayout->addWidget(SwitchPortPbtn, 5, 0, 1, 2);
-
-        PortLab = new QLabel(ProtConfigure);
-        PortLab->setObjectName(QString::fromUtf8("PortLab"));
-
-        gridLayout->addWidget(PortLab, 0, 0, 1, 1);
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout->addItem(verticalSpacer, 6, 0, 1, 2);
-
-
-        gridLayout_4->addWidget(ProtConfigure, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
@@ -543,12 +527,50 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "RLCOM", nullptr));
         LogoLab->setText(QString());
+        ProtConfigure->setTitle(QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\351\205\215\347\275\256", nullptr));
+        CheckBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "\346\227\240\346\240\241\351\252\214", nullptr));
+        CheckBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "\345\201\266\346\240\241\351\252\214", nullptr));
+        CheckBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "\345\245\207\346\240\241\351\252\214", nullptr));
+
+        BaudLab->setText(QCoreApplication::translate("MainWindow", "\346\263\242\347\211\271\347\216\207\357\274\232", nullptr));
+        SwitchPortPbtn->setText(QCoreApplication::translate("MainWindow", "\346\211\223\345\274\200\344\270\262\345\217\243", nullptr));
+        StopBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "1", nullptr));
+        StopBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "2", nullptr));
+        StopBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "1.5", nullptr));
+
+        BaudCbox->setItemText(0, QCoreApplication::translate("MainWindow", "9600", nullptr));
+        BaudCbox->setItemText(1, QCoreApplication::translate("MainWindow", "19200", nullptr));
+        BaudCbox->setItemText(2, QCoreApplication::translate("MainWindow", "38400", nullptr));
+        BaudCbox->setItemText(3, QCoreApplication::translate("MainWindow", "57600", nullptr));
+        BaudCbox->setItemText(4, QCoreApplication::translate("MainWindow", "115200", nullptr));
+        BaudCbox->setItemText(5, QCoreApplication::translate("MainWindow", "460800", nullptr));
+        BaudCbox->setItemText(6, QCoreApplication::translate("MainWindow", "500000", nullptr));
+        BaudCbox->setItemText(7, QCoreApplication::translate("MainWindow", "576000", nullptr));
+        BaudCbox->setItemText(8, QCoreApplication::translate("MainWindow", "921600", nullptr));
+        BaudCbox->setItemText(9, QCoreApplication::translate("MainWindow", "1000000", nullptr));
+        BaudCbox->setItemText(10, QCoreApplication::translate("MainWindow", "1152000", nullptr));
+        BaudCbox->setItemText(11, QCoreApplication::translate("MainWindow", "1500000", nullptr));
+        BaudCbox->setItemText(12, QCoreApplication::translate("MainWindow", "2000000", nullptr));
+        BaudCbox->setItemText(13, QCoreApplication::translate("MainWindow", "2500000", nullptr));
+        BaudCbox->setItemText(14, QCoreApplication::translate("MainWindow", "3000000", nullptr));
+        BaudCbox->setItemText(15, QCoreApplication::translate("MainWindow", "3500000", nullptr));
+        BaudCbox->setItemText(16, QCoreApplication::translate("MainWindow", "4000000", nullptr));
+
+        CheckBitLab->setText(QCoreApplication::translate("MainWindow", "\346\240\241\351\252\214\344\275\215\357\274\232", nullptr));
+        DataBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "5", nullptr));
+        DataBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "6", nullptr));
+        DataBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "7", nullptr));
+        DataBitCbox->setItemText(3, QCoreApplication::translate("MainWindow", "8", nullptr));
+
+        StopBitLab->setText(QCoreApplication::translate("MainWindow", "\345\201\234\346\255\242\344\275\215\357\274\232", nullptr));
+        DataBitLab->setText(QCoreApplication::translate("MainWindow", "\346\225\260\346\215\256\344\275\215\357\274\232", nullptr));
+        PortLab->setText(QCoreApplication::translate("MainWindow", "\347\253\257  \345\217\243\357\274\232", nullptr));
+        CleanStatsPbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\347\273\237\350\256\241", nullptr));
         ReceiveGbox->setTitle(QCoreApplication::translate("MainWindow", "\346\216\245\346\224\266\345\214\272", nullptr));
         HexShowCbox->setText(QCoreApplication::translate("MainWindow", "\345\215\201\345\205\255\350\277\233\345\210\266\346\230\276\347\244\272", nullptr));
-        CleanReceivePbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\346\216\245\346\224\266\345\214\272", nullptr));
-        TalkWindowCbox->setText(QCoreApplication::translate("MainWindow", "\345\257\271\350\257\235\345\274\217\347\252\227\345\217\243", nullptr));
-        CleanStatsPbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\347\273\237\350\256\241", nullptr));
         AutoFollowCbox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\345\212\250\350\267\237\350\270\252", nullptr));
+        TalkWindowCbox->setText(QCoreApplication::translate("MainWindow", "\345\257\271\350\257\235\345\274\217\347\252\227\345\217\243", nullptr));
+        CleanReceivePbtn->setText(QCoreApplication::translate("MainWindow", "\346\270\205\347\251\272\346\216\245\346\224\266\345\214\272", nullptr));
         SendGbox->setTitle(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201\345\214\272", nullptr));
         SendPbtn->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201", nullptr));
         EnterSendCBox->setText(QCoreApplication::translate("MainWindow", "\345\233\236\350\275\246\351\224\256\345\217\221\351\200\201", nullptr));
@@ -584,52 +606,11 @@ public:
         DataTypeLab->setText(QCoreApplication::translate("MainWindow", "\346\225\260\346\215\256\347\261\273\345\236\213\357\274\232", nullptr));
         ChannleLab->setText(QCoreApplication::translate("MainWindow", "\351\200\232\351\201\223\346\225\260\357\274\232", nullptr));
         ChartConfigure->setTitle(QCoreApplication::translate("MainWindow", "\345\233\276\350\241\250\351\205\215\347\275\256", nullptr));
-        YaxisZoomPbtn->setText(QCoreApplication::translate("MainWindow", "Y\350\275\264\346\224\276\345\244\247", nullptr));
+        AdaptiveCbox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\351\200\202\345\272\224\347\252\227\345\217\243", nullptr));
         ChartAutoFollowCbox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\345\212\250\350\267\237\350\270\252", nullptr));
         XaxisZoomPbtn->setText(QCoreApplication::translate("MainWindow", "X\350\275\264\346\224\276\345\244\247", nullptr));
-        AdaptiveCbox->setText(QCoreApplication::translate("MainWindow", "\350\207\252\351\200\202\345\272\224\347\252\227\345\217\243", nullptr));
         XaxisShrinkPbtn->setText(QCoreApplication::translate("MainWindow", "X\350\275\264\347\274\251\345\260\217", nullptr));
-        YaxisShrinkPbtn->setText(QCoreApplication::translate("MainWindow", "Y\350\275\264\347\274\251\345\260\217", nullptr));
-        YaxisZeroPbtn->setText(QCoreApplication::translate("MainWindow", "Y\350\275\264\345\275\2220", nullptr));
         TabWidget->setTabText(TabWidget->indexOf(Tab3), QCoreApplication::translate("MainWindow", "\350\231\232\346\213\237\347\244\272\346\263\242", nullptr));
-        ProtConfigure->setTitle(QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\351\205\215\347\275\256", nullptr));
-        DataBitLab->setText(QCoreApplication::translate("MainWindow", "\346\225\260\346\215\256\344\275\215\357\274\232", nullptr));
-        BaudLab->setText(QCoreApplication::translate("MainWindow", "\346\263\242\347\211\271\347\216\207\357\274\232", nullptr));
-        BaudCbox->setItemText(0, QCoreApplication::translate("MainWindow", "9600", nullptr));
-        BaudCbox->setItemText(1, QCoreApplication::translate("MainWindow", "19200", nullptr));
-        BaudCbox->setItemText(2, QCoreApplication::translate("MainWindow", "38400", nullptr));
-        BaudCbox->setItemText(3, QCoreApplication::translate("MainWindow", "57600", nullptr));
-        BaudCbox->setItemText(4, QCoreApplication::translate("MainWindow", "115200", nullptr));
-        BaudCbox->setItemText(5, QCoreApplication::translate("MainWindow", "460800", nullptr));
-        BaudCbox->setItemText(6, QCoreApplication::translate("MainWindow", "500000", nullptr));
-        BaudCbox->setItemText(7, QCoreApplication::translate("MainWindow", "576000", nullptr));
-        BaudCbox->setItemText(8, QCoreApplication::translate("MainWindow", "921600", nullptr));
-        BaudCbox->setItemText(9, QCoreApplication::translate("MainWindow", "1000000", nullptr));
-        BaudCbox->setItemText(10, QCoreApplication::translate("MainWindow", "1152000", nullptr));
-        BaudCbox->setItemText(11, QCoreApplication::translate("MainWindow", "1500000", nullptr));
-        BaudCbox->setItemText(12, QCoreApplication::translate("MainWindow", "2000000", nullptr));
-        BaudCbox->setItemText(13, QCoreApplication::translate("MainWindow", "2500000", nullptr));
-        BaudCbox->setItemText(14, QCoreApplication::translate("MainWindow", "3000000", nullptr));
-        BaudCbox->setItemText(15, QCoreApplication::translate("MainWindow", "3500000", nullptr));
-        BaudCbox->setItemText(16, QCoreApplication::translate("MainWindow", "4000000", nullptr));
-
-        CheckBitLab->setText(QCoreApplication::translate("MainWindow", "\346\240\241\351\252\214\344\275\215\357\274\232", nullptr));
-        DataBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "5", nullptr));
-        DataBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "6", nullptr));
-        DataBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "7", nullptr));
-        DataBitCbox->setItemText(3, QCoreApplication::translate("MainWindow", "8", nullptr));
-
-        CheckBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "\346\227\240\346\240\241\351\252\214", nullptr));
-        CheckBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "\345\201\266\346\240\241\351\252\214", nullptr));
-        CheckBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "\345\245\207\346\240\241\351\252\214", nullptr));
-
-        StopBitCbox->setItemText(0, QCoreApplication::translate("MainWindow", "1", nullptr));
-        StopBitCbox->setItemText(1, QCoreApplication::translate("MainWindow", "2", nullptr));
-        StopBitCbox->setItemText(2, QCoreApplication::translate("MainWindow", "1.5", nullptr));
-
-        StopBitLab->setText(QCoreApplication::translate("MainWindow", "\345\201\234\346\255\242\344\275\215\357\274\232", nullptr));
-        SwitchPortPbtn->setText(QCoreApplication::translate("MainWindow", "\346\211\223\345\274\200\344\270\262\345\217\243", nullptr));
-        PortLab->setText(QCoreApplication::translate("MainWindow", "\347\253\257  \345\217\243\357\274\232", nullptr));
     } // retranslateUi
 
 };

@@ -18,6 +18,7 @@
 #include <QSerialPortInfo>
 #include <QMainWindow>
 #include <QSerialPort>
+#include "qcustomplot.h"
 
 /* @define MAX_BAUDLIST */
 #define ConfigureFileName "ConfigureFile.ini"
@@ -28,11 +29,77 @@
 /* @define PIXEL_SIZE */
 #define PIXEL_SIZE 5
 
+/* @define MAX_X_AXIS */
+#define MAX_X_AXIS 1000
+
+/* @define MIN_X_AXIS */
+#define MIN_X_AXIS 50
+
 /* 图传帧头 */
 const uint8_t ImageHeadData[4] =
 {
     0x00, 0xff, 0x01, 0x01
 };
+
+/* 示波帧头 */
+const uint8_t ChartHeadData[4] =
+{
+    0x00, 0xff, 0x02, 0x02
+};
+
+/* 示波帧头 */
+const QColor ChartGraphColor[8] =
+{
+    0xff0000, 0x00ff00, 0x8080ff, 0xffff00,
+    0xff00ff, 0x00ffff, 0xffb2f8, 0xaaff00,
+};
+
+/* @class UnitChartLabel */
+class UnitChartLabel : public QWidget
+{
+
+    Q_OBJECT
+
+public:
+    QGridLayout* Layout;
+
+    QCheckBox* CheckBox;
+
+    QLineEdit* LineEdit;
+
+    QLabel* Label;
+
+    UnitChartLabel(QColor color)
+    {
+        Layout = new QGridLayout();
+
+        CheckBox = new QCheckBox();
+
+        LineEdit = new QLineEdit();
+
+        Label = new QLabel("0");
+
+        CheckBox->setChecked(true);
+
+        LineEdit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+        Layout->addWidget(CheckBox, 0, 0, 1, 1);
+
+        Layout->addWidget(LineEdit, 0, 1, 1, 1);
+
+        Label->setFrameShape(QFrame::Box);
+
+        Label->setStyleSheet(QString("QLabel{color:black; background-color:rgb(%1,%2,%3);}")
+                             .arg(color.red()).arg(color.green()).arg(color.blue()));
+
+        Label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+        Layout->addWidget(Label, 1, 0, 1, 2);
+
+        this->setLayout(Layout);
+    }
+};
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -53,17 +120,29 @@ private:
 
     bool SwitchImageFlag = false;       /* 图传开启状态 */
 
+    bool SwitchChartFlag = false;       /* 波形开启状态 */
+
     bool ImageHeadFlag = false;         /* 图传帧头标志位 */
+
+    bool ChartHeadFlag = false;         /* 波形帧头标志位 */
 
     bool ShowImageFlag = false;         /* 显示图像状态标志位 */
 
     uint8_t ImageHeadLen = 0;           /* 图传帧头长度 */
+
+    uint8_t ChartHeadLen = 0;           /* 示波帧头长度 */
+
+    uint8_t Channle = 0;                /* 波形通道数 */
+
+    uint8_t DataType = 0;               /* 波形数据类型 */
 
     uint16_t Height;                    /* 图像高度 */
 
     uint16_t Width;                     /* 图像宽度 */
 
     uint32_t ImageDataSize;             /* 图像数据大小 */
+
+    uint32_t ChartDataSize;             /* 示波数据大小 */
 
     uint32_t ReceiveCount = 0;          /* 接收数据量 */
 
@@ -73,9 +152,15 @@ private:
 
     uint32_t SendCount = 0;             /* 发送数据量 */
 
+    uint32_t ChartCount = 0;            /* 示波数据量 */
+
+    uint32_t ChartXRange = 300;         /* 示波X轴缩放*/
+
     QByteArray UartData;                /* 图像数据 */
 
     QByteArray ImageData;               /* 图像数据 */
+
+    UnitChartLabel* ChartLabel[8];      /* 示波标签 */
 
     QSerialPort Ser;                    /* 串口对象*/
 
@@ -108,6 +193,8 @@ public slots:
 
     void SwitchImage();
 
+    void SwitchChart();
+
     void ReceiveData();
 
     void SendData();
@@ -119,6 +206,10 @@ public slots:
     void ReadConfigure();
 
     QImage MakeImage();
+
+    void XAxisShrink();
+
+    void XAxisZoom();
 
     bool eventFilter(QObject *obj, QEvent *event);
 
