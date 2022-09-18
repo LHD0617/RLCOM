@@ -16,7 +16,9 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
@@ -36,7 +38,7 @@ public:
     QGridLayout *gridLayout_4;
     QLabel *LogoLab;
     QTabWidget *TabWidget;
-    QWidget *Tab;
+    QWidget *Tab1;
     QVBoxLayout *verticalLayout;
     QGroupBox *ReceiveGbox;
     QGridLayout *gridLayout_2;
@@ -57,8 +59,22 @@ public:
     QCheckBox *HexSendCbox;
     QCheckBox *SendCleanCbox;
     QTextEdit *SendTextEdit;
-    QWidget *tab_2;
-    QWidget *tab;
+    QWidget *Tab2;
+    QHBoxLayout *horizontalLayout;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_5;
+    QCheckBox *GridCbox;
+    QSpacerItem *verticalSpacer_2;
+    QLabel *WidthLab;
+    QLineEdit *WidthLedit;
+    QPushButton *SwitchImagePbtn;
+    QComboBox *ImageModeCBox;
+    QLineEdit *HeightLedit;
+    QLabel *HeightLab;
+    QGroupBox *ImageGbox;
+    QVBoxLayout *verticalLayout_2;
+    QLabel *ImageLab;
+    QWidget *Tab3;
     QGroupBox *ProtConfigure;
     QGridLayout *gridLayout;
     QLabel *DataBitLab;
@@ -104,11 +120,11 @@ public:
 
         TabWidget = new QTabWidget(centralwidget);
         TabWidget->setObjectName(QString::fromUtf8("TabWidget"));
-        Tab = new QWidget();
-        Tab->setObjectName(QString::fromUtf8("Tab"));
-        verticalLayout = new QVBoxLayout(Tab);
+        Tab1 = new QWidget();
+        Tab1->setObjectName(QString::fromUtf8("Tab1"));
+        verticalLayout = new QVBoxLayout(Tab1);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        ReceiveGbox = new QGroupBox(Tab);
+        ReceiveGbox = new QGroupBox(Tab1);
         ReceiveGbox->setObjectName(QString::fromUtf8("ReceiveGbox"));
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
@@ -153,7 +169,7 @@ public:
 
         verticalLayout->addWidget(ReceiveGbox);
 
-        SendGbox = new QGroupBox(Tab);
+        SendGbox = new QGroupBox(Tab1);
         SendGbox->setObjectName(QString::fromUtf8("SendGbox"));
         QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy2.setHorizontalStretch(0);
@@ -214,13 +230,82 @@ public:
 
         verticalLayout->addWidget(SendGbox);
 
-        TabWidget->addTab(Tab, QString());
-        tab_2 = new QWidget();
-        tab_2->setObjectName(QString::fromUtf8("tab_2"));
-        TabWidget->addTab(tab_2, QString());
-        tab = new QWidget();
-        tab->setObjectName(QString::fromUtf8("tab"));
-        TabWidget->addTab(tab, QString());
+        TabWidget->addTab(Tab1, QString());
+        Tab2 = new QWidget();
+        Tab2->setObjectName(QString::fromUtf8("Tab2"));
+        horizontalLayout = new QHBoxLayout(Tab2);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        groupBox = new QGroupBox(Tab2);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setMinimumSize(QSize(200, 0));
+        groupBox->setMaximumSize(QSize(200, 16777215));
+        gridLayout_5 = new QGridLayout(groupBox);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        gridLayout_5->setVerticalSpacing(20);
+        GridCbox = new QCheckBox(groupBox);
+        GridCbox->setObjectName(QString::fromUtf8("GridCbox"));
+
+        gridLayout_5->addWidget(GridCbox, 3, 0, 1, 2);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_5->addItem(verticalSpacer_2, 5, 0, 1, 2);
+
+        WidthLab = new QLabel(groupBox);
+        WidthLab->setObjectName(QString::fromUtf8("WidthLab"));
+
+        gridLayout_5->addWidget(WidthLab, 2, 0, 1, 1);
+
+        WidthLedit = new QLineEdit(groupBox);
+        WidthLedit->setObjectName(QString::fromUtf8("WidthLedit"));
+        WidthLedit->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(WidthLedit, 2, 1, 1, 1);
+
+        SwitchImagePbtn = new QPushButton(groupBox);
+        SwitchImagePbtn->setObjectName(QString::fromUtf8("SwitchImagePbtn"));
+
+        gridLayout_5->addWidget(SwitchImagePbtn, 4, 0, 1, 2);
+
+        ImageModeCBox = new QComboBox(groupBox);
+        ImageModeCBox->addItem(QString());
+        ImageModeCBox->addItem(QString());
+        ImageModeCBox->setObjectName(QString::fromUtf8("ImageModeCBox"));
+
+        gridLayout_5->addWidget(ImageModeCBox, 0, 0, 1, 2);
+
+        HeightLedit = new QLineEdit(groupBox);
+        HeightLedit->setObjectName(QString::fromUtf8("HeightLedit"));
+        HeightLedit->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(HeightLedit, 1, 1, 1, 1);
+
+        HeightLab = new QLabel(groupBox);
+        HeightLab->setObjectName(QString::fromUtf8("HeightLab"));
+
+        gridLayout_5->addWidget(HeightLab, 1, 0, 1, 1);
+
+
+        horizontalLayout->addWidget(groupBox);
+
+        ImageGbox = new QGroupBox(Tab2);
+        ImageGbox->setObjectName(QString::fromUtf8("ImageGbox"));
+        verticalLayout_2 = new QVBoxLayout(ImageGbox);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        ImageLab = new QLabel(ImageGbox);
+        ImageLab->setObjectName(QString::fromUtf8("ImageLab"));
+        ImageLab->setScaledContents(true);
+        ImageLab->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_2->addWidget(ImageLab);
+
+
+        horizontalLayout->addWidget(ImageGbox);
+
+        TabWidget->addTab(Tab2, QString());
+        Tab3 = new QWidget();
+        Tab3->setObjectName(QString::fromUtf8("Tab3"));
+        TabWidget->addTab(Tab3, QString());
 
         gridLayout_4->addWidget(TabWidget, 0, 1, 2, 1);
 
@@ -325,9 +410,20 @@ public:
         TimeSendCbox->setText(QCoreApplication::translate("MainWindow", "\345\256\232\346\227\266\345\217\221\351\200\201\357\274\210\345\215\225\344\275\215ms\357\274\211", nullptr));
         HexSendCbox->setText(QCoreApplication::translate("MainWindow", "\345\215\201\345\205\255\350\277\233\345\210\266\345\217\221\351\200\201", nullptr));
         SendCleanCbox->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201\345\220\216\346\270\205\351\231\244", nullptr));
-        TabWidget->setTabText(TabWidget->indexOf(Tab), QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\346\224\266\345\217\221", nullptr));
-        TabWidget->setTabText(TabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\345\233\276\345\203\217\344\274\240\350\276\223", nullptr));
-        TabWidget->setTabText(TabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\350\231\232\346\213\237\347\244\272\346\263\242", nullptr));
+        TabWidget->setTabText(TabWidget->indexOf(Tab1), QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\346\224\266\345\217\221", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("MainWindow", "\345\233\276\345\203\217\351\205\215\347\275\256", nullptr));
+        GridCbox->setText(QCoreApplication::translate("MainWindow", "\345\233\276\345\203\217\346\240\205\346\240\274", nullptr));
+        WidthLab->setText(QCoreApplication::translate("MainWindow", "Width\357\274\232", nullptr));
+        WidthLedit->setText(QString());
+        SwitchImagePbtn->setText(QCoreApplication::translate("MainWindow", "\345\274\200\345\247\213\346\216\245\346\224\266", nullptr));
+        ImageModeCBox->setItemText(0, QCoreApplication::translate("MainWindow", "\347\201\260\345\272\246\345\233\276", nullptr));
+        ImageModeCBox->setItemText(1, QCoreApplication::translate("MainWindow", "\344\272\214\345\200\274\345\214\226\345\233\276", nullptr));
+
+        HeightLab->setText(QCoreApplication::translate("MainWindow", "Height\357\274\232", nullptr));
+        ImageGbox->setTitle(QCoreApplication::translate("MainWindow", "Image", nullptr));
+        ImageLab->setText(QCoreApplication::translate("MainWindow", "Waiting......", nullptr));
+        TabWidget->setTabText(TabWidget->indexOf(Tab2), QCoreApplication::translate("MainWindow", "\345\233\276\345\203\217\344\274\240\350\276\223", nullptr));
+        TabWidget->setTabText(TabWidget->indexOf(Tab3), QCoreApplication::translate("MainWindow", "\350\231\232\346\213\237\347\244\272\346\263\242", nullptr));
         ProtConfigure->setTitle(QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\351\205\215\347\275\256", nullptr));
         DataBitLab->setText(QCoreApplication::translate("MainWindow", "\346\225\260\346\215\256\344\275\215\357\274\232", nullptr));
         BaudLab->setText(QCoreApplication::translate("MainWindow", "\346\263\242\347\211\271\347\216\207\357\274\232", nullptr));

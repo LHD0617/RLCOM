@@ -25,6 +25,9 @@
 /* @define MAX_BAUDLIST */
 #define MAX_BAUDLIST 17
 
+/* @define PIXEL_SIZE */
+#define PIXEL_SIZE 5
+
 /* 波特率列表 */
 const QString BaudList[MAX_BAUDLIST] =
 {
@@ -47,9 +50,13 @@ const QString CheckBitList[3] =
 /* 停止位列表 */
 const QString StopBitList[3] =
 {
-    "1",
-    "2",
-    "1.5",
+    "1", "2", "1.5",
+};
+
+/* 图传帧头 */
+const uint8_t ImageHeadData[4] =
+{
+    0x00, 0xff, 0x01, 0x01
 };
 
 QT_BEGIN_NAMESPACE
@@ -69,6 +76,20 @@ private:
 
     bool SwitchPortFlag = false;        /* 端口开启状态 */
 
+    bool SwitchImageFlag = false;       /* 图传开启状态 */
+
+    bool ImageHeadFlag = false;         /* 图传帧头标志位 */
+
+    bool ShowImageFlag = false;         /* 显示图像状态标志位 */
+
+    uint8_t ImageHeadLen = 0;           /* 图传帧头长度 */
+
+    uint16_t Height;                    /* 图像高度 */
+
+    uint16_t Width;                     /* 图像宽度 */
+
+    uint32_t ImageDataSize;             /* 图像数据大小 */
+
     uint32_t ReceiveCount = 0;          /* 接收数据量 */
 
     uint32_t ReceiveLastCount = 0;      /* 上一次接收数据量 */
@@ -76,6 +97,10 @@ private:
     uint32_t ReceiveSpeed = 0;          /* 接收速度 */
 
     uint32_t SendCount = 0;             /* 发送数据量 */
+
+    QByteArray UartData;                /* 图像数据 */
+
+    QByteArray ImageData;               /* 图像数据 */
 
     QSerialPort Ser;                    /* 串口对象*/
 
@@ -86,6 +111,8 @@ private:
     QLabel* TimeLab;                    /* 当前时间Label */
 
     QLabel* DataLab;                    /* 数据信息Label */
+
+    QLabel* MousePostLab;               /* 鼠标位置Label */
 
     QTimer AutoSendTimer;               /* 定时发送定时器 */
 
@@ -104,6 +131,8 @@ public slots:
 
     void CleanSendData();
 
+    void SwitchImage();
+
     void ReceiveData();
 
     void SendData();
@@ -113,6 +142,8 @@ public slots:
     void WriteConfigure();
 
     void ReadConfigure();
+
+    QImage MakeImage();
 
     bool eventFilter(QObject *obj, QEvent *event);
 

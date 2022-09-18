@@ -24,10 +24,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     TimeLab = new QLabel();
 
-    DataLab = new QLabel(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
-                         .arg(ReceiveCount, 10)
-                         .arg(ReceiveSpeed, 10)
-                         .arg(SendCount, 10));
+    DataLab = new QLabel();
+
+    MousePostLab = new QLabel(ui->ImageLab);
+
+    MousePostLab->setStyleSheet("color:red;");
+
+    ui->ImageLab->setMouseTracking(true);
 
     ui->statusbar->addPermanentWidget(DataLab);
 
@@ -56,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
     {
         ui->StopBitCbox->addItem(StopBitList[i]);
     }
+    ui->HeightLedit->setValidator(new QIntValidator(0, 999, this));
+
+    ui->WidthLedit->setValidator(new QIntValidator(0, 999, this));
+
     ReadConfigure();
 
     connect(ui->SwitchPortPbtn, SIGNAL(clicked()), this, SLOT(SwitchPort()));
@@ -68,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->SendPbtn, SIGNAL(clicked()), this, SLOT(SendData()));
 
+    connect(ui->SwitchImagePbtn, SIGNAL(clicked()), this, SLOT(SwitchImage()));
+
     connect(ui->TimeSendCbox, SIGNAL(stateChanged(int)), this, SLOT(AutoSend(int)));
 
     connect(&Ser, SIGNAL(readyRead()), this, SLOT(ReceiveData()));
@@ -79,6 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&UpdateTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
 
     ui->SendTextEdit->installEventFilter(this);
+
+    ui->ImageLab->installEventFilter(this);
 
     UpdateTimeTimer.start(1000);
 
@@ -253,29 +264,152 @@ void MainWindow::CleanSendData()
 }
 
 /**
+    * @name		SwitchImage
+    * @brief  	开关图像传输
+  */
+void MainWindow::SwitchImage()
+{
+    if(!SwitchImageFlag)
+    {
+        if(SwitchPortFlag)
+        {
+            Height = ui->HeightLedit->text().toInt();
+
+            Width = ui->WidthLedit->text().toInt();
+
+            if(Height && Width)
+            {
+                if(ui->ImageModeCBox->currentIndex() == 0)
+                {
+                    ImageDataSize = Height * Width;
+                }
+                else
+                {
+                    if((Height * Width) % 8 == 0)
+                        ImageDataSize = (Height * Width) / 8;
+                    else
+                        ImageDataSize = (Height * Width) / 8 + 1;
+                }
+                ImageData.resize(Height * Width * PIXEL_SIZE * PIXEL_SIZE);
+
+                ui->SwitchImagePbtn->setText("停止接收");
+
+                ui->ImageModeCBox->setEnabled(false);
+
+                ui->HeightLedit->setEnabled(false);
+
+                ui->WidthLedit->setEnabled(false);
+
+                SwitchImageFlag = true;
+            }
+            else
+            {
+                ShowMessage("请输入正确的图像尺寸");
+            }
+        }
+        else
+        {
+            ShowMessage("请先打开串口");
+        }
+    }
+    else
+    {
+        ImageHeadFlag = false;
+
+        ShowImageFlag = false;
+
+        ui->SwitchImagePbtn->setText("开始接收");
+
+        ui->ImageModeCBox->setEnabled(true);
+
+        ui->HeightLedit->setEnabled(true);
+
+        ui->WidthLedit->setEnabled(true);
+
+        SwitchImageFlag = false;
+    }
+}
+
+/**
     * @name		ReceiveData
     * @brief  	接收数据函数
   */
 void MainWindow::ReceiveData()
 {
     QByteArray Data = Ser.readAll();
+    /* 串口收发 */
+    if(ui->TabWidget->currentIndex() == 0)
+    {
+        if(ui->TalkWindowCbox->isChecked())
+        {
+            ui->ReceiveTextEdit->append("<font color=\"#FF0020\">" + NowTime + " Receive:" + "</font>");
+        }
 
-    if(ui->TalkWindowCbox->isChecked())
-    {
-        ui->ReceiveTextEdit->append("<font color=\"#FF0000\">" + NowTime + " Receive:" + "</font>");
+        if(!ui->HexShowCbox->isChecked())
+        {
+            ui->ReceiveTextEdit->append(Data);
+        }
+        else
+        {
+            ui->ReceiveTextEdit->append(ByteArrayToHexString(Data));
+        }
+        if(ui->AutoFollowCbox->isChecked())
+        {
+            ui->ReceiveTextEdit->moveCursor(QTextCursor::End);
+        }
     }
+    /* 图像传输 */
+    if(ui->TabWidget->currentIndex() == 1)
+    {
+        if(SwitchImageFlag)
+        {
+            if(!ImageHeadFlag)
+            {
+                for(int i = 0; i < Data.size(); i++)
+                {
+                    if((uint8_t)Data[i] != ImageHeadData[ImageHeadLen])
+                    {
+                        ImageHeadLen = 0;
+                    }
+                    if((uint8_t)Data[i] == ImageHeadData[ImageHeadLen])
+                    {
+                        ImageHeadLen++;
+                    }
+                    else
+                    {
+                        ImageHeadLen = 0;
+                    }
+                    if(ImageHeadLen == 4)
+                    {
+                        ImageHeadFlag = true;
 
-    if(!ui->HexShowCbox->isChecked())
-    {
-        ui->ReceiveTextEdit->append(Data);
+                        ImageHeadLen = 0;
+
+                        UartData.append(Data.mid(i + 1));
+
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                UartData.append(Data);
+
+                if(UartData.size() >= (int)ImageDataSize)
+                {
+                    ui->ImageLab->setPixmap(QPixmap::fromImage(MakeImage()));
+
+                    ImageHeadFlag = false;
+
+                    ShowImageFlag = true;
+                }
+            }
+        }
     }
-    else
+    /* 虚拟示波 */
+    if(ui->TabWidget->currentIndex() == 0)
     {
-        ui->ReceiveTextEdit->append(ByteArrayToHexString(Data));
-    }
-    if(ui->AutoFollowCbox->isChecked())
-    {
-        ui->ReceiveTextEdit->moveCursor(QTextCursor::End);
+
     }
     ReceiveCount += Data.size();
 }
@@ -286,54 +420,57 @@ void MainWindow::ReceiveData()
   */
 void MainWindow::SendData()
 {
-    if(SwitchPortFlag)
+    if(ui->TabWidget->currentIndex() == 0)
     {
-        QString Data = ui->SendTextEdit->toPlainText();
-
-        if(Data.size() > 0)
+        if(SwitchPortFlag)
         {
-            if(ui->TalkWindowCbox->isChecked())
-            {
-                ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>");
+            QString Data = ui->SendTextEdit->toPlainText();
 
-                ui->ReceiveTextEdit->append(Data);
-            }
-
-            if(ui->HexSendCbox->isChecked())
+            if(Data.size() > 0)
             {
-                if (Data.contains(" "))
+                if(ui->TalkWindowCbox->isChecked())
                 {
-                    Data.replace(QString(" "),QString(""));
+                    ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>");
+
+                    ui->ReceiveTextEdit->append(Data);
                 }
-                QByteArray TempData = HexStringToQByteArray(Data);
 
-                Ser.write(TempData);
+                if(ui->HexSendCbox->isChecked())
+                {
+                    if (Data.contains(" "))
+                    {
+                        Data.replace(QString(" "),QString(""));
+                    }
+                    QByteArray TempData = HexStringToQByteArray(Data);
 
-                SendCount += TempData.size();
+                    Ser.write(TempData);
+
+                    SendCount += TempData.size();
+                }
+                else
+                {
+                    if(ui->AutoEnterCBox->isChecked())
+                    {
+                        Data.append("\r\n");
+                    }
+                    Ser.write(Data.toUtf8());
+
+                    SendCount += Data.size();
+                }
+                if(ui->SendCleanCbox->isChecked())
+                {
+                    CleanSendData();
+                }
             }
             else
             {
-                if(ui->AutoEnterCBox->isChecked())
-                {
-                    Data.append("\r\n");
-                }
-                Ser.write(Data.toUtf8());
-
-                SendCount += Data.size();
-            }
-            if(ui->SendCleanCbox->isChecked())
-            {
-                CleanSendData();
+                ShowMessage("请先输入数据");
             }
         }
         else
         {
-            ShowMessage("请先输入数据");
+            ShowMessage("请先打开串口");
         }
-    }
-    else
-    {
-        ShowMessage("请先打开串口");
     }
 }
 
@@ -377,6 +514,12 @@ void MainWindow::WriteConfigure()
 
     fprintf(fp, QString("[StopBit]=%1\n").arg(ui->StopBitCbox->currentIndex()).toLatin1());
 
+    fprintf(fp, QString("[ImageMode]=%1\n").arg(ui->ImageModeCBox->currentIndex()).toLatin1());
+
+    fprintf(fp, QString("[Height]=%1\n").arg(ui->HeightLedit->text().toInt()).toLatin1());
+
+    fprintf(fp, QString("[Width]=%1\n").arg(ui->WidthLedit->text().toInt()).toLatin1());
+
     if(ui->HexShowCbox->isChecked())
         fprintf(fp, "[HexShow]=true\n");
     else
@@ -405,6 +548,10 @@ void MainWindow::WriteConfigure()
         fprintf(fp, "[SendClean]=true\n");
     else
         fprintf(fp, "[SendClean]=false\n");
+    if(ui->GridCbox->isChecked())
+        fprintf(fp, "[ImageGrid]=true\n");
+    else
+        fprintf(fp, "[ImageGrid]=false\n");
     fclose(fp);
 }
 
@@ -428,36 +575,133 @@ void MainWindow::ReadConfigure()
 
             ui->StopBitCbox->setCurrentIndex(ReadLineChars(fp, 4).split("=")[1].toInt());
 
-            if(ReadLineChars(fp, 5).split("=")[1].toLatin1() == "true")
+            ui->ImageModeCBox->setCurrentIndex(ReadLineChars(fp, 5).split("=")[1].toInt());
+
+            ui->HeightLedit->setText(ReadLineChars(fp, 6).split("=")[1]);
+
+            ui->WidthLedit->setText(ReadLineChars(fp, 7).split("=")[1]);
+
+            if(ReadLineChars(fp, 8).split("=")[1].toLatin1() == "true")
                 ui->HexShowCbox->setChecked(true);
             else
                 ui->HexShowCbox->setChecked(false);
-            if(ReadLineChars(fp, 6).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 9).split("=")[1].toLatin1() == "true")
                 ui->AutoFollowCbox->setChecked(true);
             else
                 ui->AutoFollowCbox->setChecked(false);
-            if(ReadLineChars(fp, 7).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
                 ui->TalkWindowCbox->setChecked(true);
             else
                 ui->TalkWindowCbox->setChecked(false);
-            if(ReadLineChars(fp, 8).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 11).split("=")[1].toLatin1() == "true")
                 ui->HexSendCbox->setChecked(true);
             else
                 ui->HexSendCbox->setChecked(false);
-            if(ReadLineChars(fp, 9).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 12).split("=")[1].toLatin1() == "true")
                 ui->EnterSendCBox->setChecked(true);
             else
                 ui->EnterSendCBox->setChecked(false);
-            if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 13).split("=")[1].toLatin1() == "true")
                 ui->AutoEnterCBox->setChecked(true);
             else
                 ui->AutoEnterCBox->setChecked(false);
-            if(ReadLineChars(fp, 11).split("=")[1].toLatin1() == "true")
+            if(ReadLineChars(fp, 14).split("=")[1].toLatin1() == "true")
                 ui->SendCleanCbox->setChecked(true);
             else
                 ui->SendCleanCbox->setChecked(false);
+            if(ReadLineChars(fp, 15).split("=")[1].toLatin1() == "true")
+                ui->GridCbox->setChecked(true);
+            else
+                ui->GridCbox->setChecked(false);
         }
     }
+}
+
+/**
+    * @name		MakeImage
+    * @brief  	生成图像函数
+  */
+QImage MainWindow::MakeImage()
+{
+    uint8_t* DataBuffFp;
+
+    uint8_t* ImageFp;
+
+    uint8_t* PixelBaseFp;
+
+    uint8_t PixelBit;
+
+    uint16_t i, j, k, l;
+
+    DataBuffFp = (uint8_t*)UartData.data();
+
+    ImageFp = (uint8_t*)ImageData.data();
+
+    /* 灰度图 */
+    if(ui->ImageModeCBox->currentIndex() == 0)
+    {
+        for(i = 0; i < Height; i++)
+        {
+            for(j = 0; j < Width; j++)
+            {
+                PixelBit = *(DataBuffFp + i * Width + j);
+
+                PixelBaseFp = ImageFp + i * Width * PIXEL_SIZE * PIXEL_SIZE + j * PIXEL_SIZE;
+
+                for(k = 0; k < PIXEL_SIZE; k++)
+                {
+                    for(l = 0; l < PIXEL_SIZE; l++)
+                    {
+                        *(PixelBaseFp + k * Width * PIXEL_SIZE + l) = PixelBit;
+                    }
+                }
+            }
+        }
+    }
+    /* 二值化图 */
+    else
+    {
+        for(i = 0; i < Height; i++)
+        {
+            for(j = 0; j < Width; j++)
+            {
+                if((*(DataBuffFp + (i * Width + j) / 8)) & (0x80 >> ((i * Width + j) % 8)))
+                    PixelBit = 255;
+                else
+                    PixelBit = 0;
+
+                PixelBaseFp = ImageFp + i * Width * PIXEL_SIZE * PIXEL_SIZE + j * PIXEL_SIZE;
+
+                for(k = 0; k < PIXEL_SIZE; k++)
+                {
+                    for(l = 0; l < PIXEL_SIZE; l++)
+                    {
+                        *(PixelBaseFp + k * Width * PIXEL_SIZE + l) = PixelBit;
+                    }
+                }
+            }
+        }
+    }
+    if(ui->GridCbox->isChecked())
+    {
+        for(i = 0; i < Height; i++)
+        {
+            for(j = 0; j < Width * PIXEL_SIZE; j++)
+            {
+                *(ImageFp + i * Width * PIXEL_SIZE * PIXEL_SIZE + j) = 100;
+            }
+        }
+        for(i = 0; i < Width; i++)
+        {
+            for(j = 0; j < Height * PIXEL_SIZE; j++)
+            {
+                *(ImageFp + i * PIXEL_SIZE + j * Width * PIXEL_SIZE) = 100;
+            }
+        }
+    }
+    UartData.clear();
+
+    return QImage((const unsigned char *)ImageData.data(), Width * PIXEL_SIZE, Height * PIXEL_SIZE, Width * PIXEL_SIZE, QImage::Format_Grayscale8);
 }
 
 /**
@@ -470,16 +714,64 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         if(event->type() == QEvent::KeyPress)
         {
-             QKeyEvent *k = static_cast<QKeyEvent *>(event);
+            if(ui->TabWidget->currentIndex() == 0)
+            {
+                QKeyEvent *k = static_cast<QKeyEvent *>(event);
 
-             if(k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)
-             {
-                 if(ui->EnterSendCBox->isChecked())
-                 {
-                    SendData();
-                 }
-                 return true;
-             }
+                if(k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)
+                {
+                    if(ui->EnterSendCBox->isChecked())
+                    {
+                        SendData();
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    if (obj == ui->ImageLab)
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+            if(ShowImageFlag)
+            {
+                MousePostLab->setVisible(true);
+
+                float RatioW = (float)Width / ui->ImageLab->width();
+
+                float RatioH = (float)Height / ui->ImageLab->height();
+
+                uint16_t MouseX = mouseEvent->localPos().x();
+
+                uint16_t MouseY = mouseEvent->localPos().y();
+
+                uint16_t MousePosX = MouseX * RatioW;
+
+                uint16_t MousePosY = MouseY * RatioH;
+
+                int16_t ShowLabPosX = 30;
+
+                int16_t ShowLabPosY = 30;
+
+                if(Width - MousePosX < 10)
+                    ShowLabPosX = -50;
+                if(Height - MousePosY < 5)
+                    ShowLabPosY = -20;
+
+                MousePostLab->move((MouseX + ShowLabPosX), (MouseY + ShowLabPosY));
+
+                MousePostLab->setText(QString("(%1,%2)").arg(MousePosX).arg(MousePosY));
+
+                MousePostLab->adjustSize();
+            }
+            else
+                MousePostLab->setVisible(false);
+        }
+        if(event->type() == QEvent::Leave)
+        {
+            MousePostLab->setVisible(false);
         }
     }
     return false;
