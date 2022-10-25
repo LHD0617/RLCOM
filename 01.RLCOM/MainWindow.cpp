@@ -310,6 +310,8 @@ void MainWindow::SwitchImage()
 
         ShowImageFlag = false;
 
+        ui->ImageLab->setText("Waiting......");
+
         ui->SwitchImagePbtn->setText("开始接收");
 
         ui->ImageModeCBox->setEnabled(true);
