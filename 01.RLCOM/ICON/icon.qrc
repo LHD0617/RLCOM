@@ -1,5 +1,7 @@
 <RCC>
-    <qresource prefix="/new/prefix1">
+    <qresource prefix="/icon">
         <file>logo.png</file>
+        <file>checkbox.png</file>
+        <file>combobox.png</file>
     </qresource>
 </RCC>

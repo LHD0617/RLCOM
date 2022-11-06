@@ -34,20 +34,6 @@ int main(int argc, char *argv[])
 
         MainWindow ui;
 
-        QFile file("flatgray.css");
-
-        if(file.open(QFile::ReadOnly))
-        {
-            QString qss = QLatin1String(file.readAll());
-
-            QString paletteColor = qss.mid(20, 7);
-
-            ui.setPalette(QPalette(QColor(paletteColor)));
-
-            ui.setStyleSheet(qss);
-
-            file.close();
-        }
         ui.show();
 
         return app.exec();
