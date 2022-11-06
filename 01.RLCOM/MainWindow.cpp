@@ -24,67 +24,43 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     TimeLab = new QLabel();
-
     DataLab = new QLabel();
-
     MousePostLab = new QLabel(ui->ImageLab);
 
     MousePostLab->setStyleSheet("color:red;");
-
     ui->ImageLab->setMouseTracking(true);
-
     ui->statusbar->addPermanentWidget(DataLab);
-
     ui->statusbar->addPermanentWidget(TimeLab);
 
     UpdateTime();
 
     ui->BaudCbox->setCurrentIndex(4);
-
     ui->DataBitCbox->setCurrentIndex(3);
-
     ui->HeightLedit->setValidator(new QIntValidator(0, 999, this));
-
     ui->WidthLedit->setValidator(new QIntValidator(0, 999, this));
-
     ui->ChartWidget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
     ReadConfigure();
 
     connect(ui->SwitchPortPbtn, SIGNAL(clicked()), this, SLOT(SwitchPort()));
-
     connect(ui->CleanReceivePbtn, SIGNAL(clicked()), this, SLOT(CleanReceiveData()));
-
     connect(ui->CleanStatsPbtn, SIGNAL(clicked()), this, SLOT(CleanStats()));
-
     connect(ui->CleanSendPbtn, SIGNAL(clicked()), this, SLOT(CleanSendData()));
-
     connect(ui->SendPbtn, SIGNAL(clicked()), this, SLOT(SendData()));
-
     connect(ui->SwitchImagePbtn, SIGNAL(clicked()), this, SLOT(SwitchImage()));
-
     connect(ui->SwitchWaveformPbtn, SIGNAL(clicked()), this, SLOT(SwitchChart()));
-
     connect(ui->XaxisZoomPbtn, SIGNAL(clicked()), this, SLOT(XAxisZoom()));
-
     connect(ui->XaxisShrinkPbtn, SIGNAL(clicked()), this, SLOT(XAxisShrink()));
-
     connect(ui->TimeSendCbox, SIGNAL(stateChanged(int)), this, SLOT(AutoSend(int)));
-
     connect(&Ser, SIGNAL(readyRead()), this, SLOT(ReceiveData()));
-
     connect(&AutoSendTimer, SIGNAL(timeout()), this, SLOT(SendData()));
-
     connect(&RefreshPortTimer, SIGNAL(timeout()), this, SLOT(RefreshPort()));
-
     connect(&UpdateTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
 
     ui->SendTextEdit->installEventFilter(this);
-
     ui->ImageLab->installEventFilter(this);
 
     UpdateTimeTimer.start(1000);
-
     RefreshPortTimer.start(100);
 }
 
@@ -113,11 +89,8 @@ void MainWindow::RefreshPort()
         if(TempPortList != PortList)
         {
             PortList.clear();
-
             PortList = TempPortList;
-
             ui->PortCbox->clear();
-
             ui->PortCbox->addItems(PortList);
         }
     }
@@ -148,13 +121,10 @@ void MainWindow::SwitchPort()
         if(ui->PortCbox->count() > 0)
         {
             Ser.setPortName(ui->PortCbox->currentText());
-
             Ser.setBaudRate(ui->BaudCbox->currentText().toInt());
-
             Ser.setDataBits((QSerialPort::DataBits)ui->DataBitCbox->currentText().toInt());
 
             uint8_t CheckBit = ui->CheckBitCbox->currentIndex();
-
             if(!CheckBit)
             {
                 Ser.setParity((QSerialPort::NoParity));
@@ -164,25 +134,16 @@ void MainWindow::SwitchPort()
                 Ser.setParity((QSerialPort::Parity)(CheckBit + 1));
             }
             Ser.setStopBits((QSerialPort::StopBits)ui->StopBitCbox->currentIndex());
-
             if(Ser.open(QIODevice::ReadWrite))
             {
                 ShowMessage(ui->PortCbox->currentText() + "打开成功");
-
                 SwitchPortFlag = true;
-
                 ui->SwitchPortPbtn->setText("关闭串口");
-
                 ui->PortCbox->setEnabled(false);
-
                 ui->BaudCbox->setEnabled(false);
-
                 ui->DataBitCbox->setEnabled(false);
-
                 ui->CheckBitCbox->setEnabled(false);
-
                 ui->StopBitCbox->setEnabled(false);
-
                 Ser.clear();
             }
             else
@@ -198,21 +159,13 @@ void MainWindow::SwitchPort()
     else
     {
         SwitchPortFlag = false;
-
         ui->SwitchPortPbtn->setText("打开串口");
-
         ui->PortCbox->setEnabled(true);
-
         ui->BaudCbox->setEnabled(true);
-
         ui->DataBitCbox->setEnabled(true);
-
         ui->CheckBitCbox->setEnabled(true);
-
         ui->StopBitCbox->setEnabled(true);
-
         Ser.close();
-
         ShowMessage(ui->PortCbox->currentText() + "已关闭");
     }
 }
@@ -233,13 +186,9 @@ void MainWindow::CleanReceiveData()
 void MainWindow::CleanStats()
 {
     ReceiveCount = 0;
-
     ReceiveLastCount = 0;
-
     ReceiveSpeed = 0;
-
     SendCount = 0;
-
     DataLab->setText(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
                     .arg(ReceiveCount, 10)
                     .arg(ReceiveSpeed, 10)
@@ -266,9 +215,7 @@ void MainWindow::SwitchImage()
         if(SwitchPortFlag)
         {
             Height = ui->HeightLedit->text().toInt();
-
             Width = ui->WidthLedit->text().toInt();
-
             if(Height && Width)
             {
                 if(ui->ImageModeCBox->currentIndex() == 0)
@@ -283,15 +230,10 @@ void MainWindow::SwitchImage()
                         ImageDataSize = (Height * Width) / 8 + 1;
                 }
                 ImageData.resize(Height * Width * PIXEL_SIZE * PIXEL_SIZE);
-
                 ui->SwitchImagePbtn->setText("停止接收");
-
                 ui->ImageModeCBox->setEnabled(false);
-
                 ui->HeightLedit->setEnabled(false);
-
                 ui->WidthLedit->setEnabled(false);
-
                 SwitchImageFlag = true;
             }
             else
@@ -307,19 +249,12 @@ void MainWindow::SwitchImage()
     else
     {
         ImageHeadFlag = false;
-
         ShowImageFlag = false;
-
         ui->ImageLab->setText("Waiting......");
-
         ui->SwitchImagePbtn->setText("开始接收");
-
         ui->ImageModeCBox->setEnabled(true);
-
         ui->HeightLedit->setEnabled(true);
-
         ui->WidthLedit->setEnabled(true);
-
         SwitchImageFlag = false;
     }
 }
@@ -335,9 +270,7 @@ void MainWindow::SwitchChart()
         if(SwitchPortFlag)
         {
             Channle = ui->ChannleSbox->text().toInt();
-
             DataType = ui->DataTypeCbox->currentIndex();
-
             if(DataType > 5)
             {
                 ChartDataSize = (DataType - 5) * 4 * Channle;
@@ -347,31 +280,20 @@ void MainWindow::SwitchChart()
                 ChartDataSize = ((DataType % 3) + 1) * Channle;
             }
             QHBoxLayout* Layout = new QHBoxLayout();
-
             QWidget* ChartLabWidget = new QWidget();
-
             for(uint8_t i = 0; i < Channle; i++)
             {
                 ui->ChartWidget->addGraph();
-
                 ChartLabel[i] = new UnitChartLabel(ChartGraphColor[i]);
-
                 Layout->addWidget(ChartLabel[i]);
-
                 ui->ChartWidget->graph(i)->setPen(QPen(ChartGraphColor[i]));
             }
             ChartLabWidget->setLayout(Layout);
-
             ui->gridLayout_6->addWidget(ChartLabWidget, 1, 0, 1, 4);
-
             ui->ChartWidget->replot();
-
             ui->SwitchWaveformPbtn->setText("停止接收");
-
             ui->ChannleSbox->setEnabled(false);
-
             ui->DataTypeCbox->setEnabled(false);
-
             SwitchChartFlag = true;
         }
         else
@@ -382,25 +304,15 @@ void MainWindow::SwitchChart()
     else
     {
         ChartHeadFlag = false;
-
         ChartCount = 0;
-
         ui->ChartWidget->clearGraphs();
-
         ui->ChartWidget->replot();
-
         auto ChartLabWidget = ui->gridLayout_6->itemAtPosition(1, 0);
-
         ChartLabWidget->widget()->setVisible(false);
-
         ui->gridLayout_6->removeWidget(ChartLabWidget->widget());
-
         ui->SwitchWaveformPbtn->setText("开始接收");
-
         ui->ChannleSbox->setEnabled(true);
-
         ui->DataTypeCbox->setEnabled(true);
-
         SwitchChartFlag = false;
     }
 }
@@ -457,11 +369,8 @@ void MainWindow::ReceiveData()
                     if(ImageHeadLen == 4)
                     {
                         ImageHeadFlag = true;
-
                         ImageHeadLen = 0;
-
                         UartData.append(Data.mid(i + 1));
-
                         break;
                     }
                 }
@@ -473,9 +382,7 @@ void MainWindow::ReceiveData()
                 if(UartData.size() >= (int)ImageDataSize)
                 {
                     ui->ImageLab->setPixmap(QPixmap::fromImage(MakeImage()));
-
                     ImageHeadFlag = false;
-
                     ShowImageFlag = true;
                 }
             }
@@ -505,11 +412,8 @@ void MainWindow::ReceiveData()
                     if(ChartHeadLen == 4)
                     {
                         ChartHeadFlag = true;
-
                         ChartHeadLen = 0;
-
                         UartData.append(Data.mid(i + 1));
-
                         break;
                     }
                 }
@@ -554,9 +458,7 @@ void MainWindow::ReceiveData()
                         break;
                         }
                         ui->ChartWidget->graph(i)->addData(ChartCount, dat);
-
                         ChartLabel[i]->Label->setText(QString("%1").arg(dat));
-
                         if(ui->AdaptiveCbox->isChecked())
                         {
                             ui->ChartWidget->graph(i)->rescaleValueAxis(true);
@@ -570,11 +472,8 @@ void MainWindow::ReceiveData()
                         ui->ChartWidget->xAxis->setRange(temp > ChartXRange ? temp - ChartXRange : 0, ChartXRange > temp ? ChartXRange : temp);
                     }
                     ui->ChartWidget->replot(QCustomPlot::rpQueuedReplot);
-
                     ChartCount++;
-
                     UartData.clear();
-
                     ChartHeadFlag = false;
                 }
             }
@@ -600,7 +499,6 @@ void MainWindow::SendData()
                 if(ui->TalkWindowCbox->isChecked())
                 {
                     ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>");
-
                     ui->ReceiveTextEdit->append(Data);
                 }
 
@@ -611,9 +509,7 @@ void MainWindow::SendData()
                         Data.replace(QString(" "),QString(""));
                     }
                     QByteArray TempData = HexStringToQByteArray(Data);
-
                     Ser.write(TempData);
-
                     SendCount += TempData.size();
                 }
                 else
@@ -623,7 +519,6 @@ void MainWindow::SendData()
                         Data.append("\r\n");
                     }
                     Ser.write(Data.toUtf8());
-
                     SendCount += Data.size();
                 }
                 if(ui->SendCleanCbox->isChecked())
@@ -652,15 +547,12 @@ void MainWindow::AutoSend(int state)
     if(state)
     {
         ui->TimeSBox->setReadOnly(true);
-
         uint16_t time = ui->TimeSBox->value();
-
         AutoSendTimer.start(time);
     }
     else
     {
         AutoSendTimer.stop();
-
         ui->TimeSBox->setReadOnly(false);
     }
 }
@@ -672,25 +564,15 @@ void MainWindow::AutoSend(int state)
 void MainWindow::WriteConfigure()
 {
     FILE *fp = fopen(ConfigureFileName, "w");
-
     fprintf(fp, "[Configure]\n");
-
     fprintf(fp, QString("[Baud]=%1\n").arg(ui->BaudCbox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[DataBit]=%1\n").arg(ui->DataBitCbox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[CheckBit]=%1\n").arg(ui->CheckBitCbox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[StopBit]=%1\n").arg(ui->StopBitCbox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[ImageMode]=%1\n").arg(ui->ImageModeCBox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[Channle]=%1\n").arg(ui->ChannleSbox->text()).toLatin1());
-
     fprintf(fp, QString("[DataType]=%1\n").arg(ui->DataTypeCbox->currentIndex()).toLatin1());
-
     fprintf(fp, QString("[Height]=%1\n").arg(ui->HeightLedit->text().toInt()).toLatin1());
-
     fprintf(fp, QString("[Width]=%1\n").arg(ui->WidthLedit->text().toInt()).toLatin1());
 
     if(ui->HexShowCbox->isChecked())
@@ -749,23 +631,14 @@ void MainWindow::ReadConfigure()
         if(strcmp(ReadLineChars(fp, 0).toLatin1(), "[Configure]") == 0)
         {
             ui->BaudCbox->setCurrentIndex(ReadLineChars(fp, 1).split("=")[1].toInt());
-
             ui->DataBitCbox->setCurrentIndex(ReadLineChars(fp, 2).split("=")[1].toInt());
-
             ui->CheckBitCbox->setCurrentIndex(ReadLineChars(fp, 3).split("=")[1].toInt());
-
             ui->StopBitCbox->setCurrentIndex(ReadLineChars(fp, 4).split("=")[1].toInt());
-
             ui->ImageModeCBox->setCurrentIndex(ReadLineChars(fp, 5).split("=")[1].toInt());
-
             ui->ChannleSbox->setValue(ReadLineChars(fp, 6).split("=")[1].toInt());
-
             ui->DataTypeCbox->setCurrentIndex(ReadLineChars(fp, 7).split("=")[1].toInt());
-
             ui->HeightLedit->setText(ReadLineChars(fp, 8).split("=")[1]);
-
             ui->WidthLedit->setText(ReadLineChars(fp, 9).split("=")[1]);
-
             if(ReadLineChars(fp, 10).split("=")[1].toLatin1() == "true")
                 ui->HexShowCbox->setChecked(true);
             else
@@ -817,17 +690,11 @@ void MainWindow::ReadConfigure()
 QImage MainWindow::MakeImage()
 {
     uint8_t* DataBuffFp;
-
     uint8_t* ImageFp;
-
     uint8_t* PixelBaseFp;
-
     uint8_t PixelBit;
-
     uint16_t i, j, k, l;
-
     DataBuffFp = (uint8_t*)UartData.data();
-
     ImageFp = (uint8_t*)ImageData.data();
 
     /* 灰度图 */
@@ -838,9 +705,7 @@ QImage MainWindow::MakeImage()
             for(j = 0; j < Width; j++)
             {
                 PixelBit = *(DataBuffFp + i * Width + j);
-
                 PixelBaseFp = ImageFp + i * Width * PIXEL_SIZE * PIXEL_SIZE + j * PIXEL_SIZE;
-
                 for(k = 0; k < PIXEL_SIZE; k++)
                 {
                     for(l = 0; l < PIXEL_SIZE; l++)
@@ -862,9 +727,7 @@ QImage MainWindow::MakeImage()
                     PixelBit = 255;
                 else
                     PixelBit = 0;
-
                 PixelBaseFp = ImageFp + i * Width * PIXEL_SIZE * PIXEL_SIZE + j * PIXEL_SIZE;
-
                 for(k = 0; k < PIXEL_SIZE; k++)
                 {
                     for(l = 0; l < PIXEL_SIZE; l++)
@@ -893,7 +756,6 @@ QImage MainWindow::MakeImage()
         }
     }
     UartData.clear();
-
     return QImage((const unsigned char *)ImageData.data(), Width * PIXEL_SIZE, Height * PIXEL_SIZE, Width * PIXEL_SIZE, QImage::Format_Grayscale8);
 }
 
@@ -951,36 +813,24 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::MouseMove)
         {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-
             if(ShowImageFlag)
             {
                 MousePostLab->setVisible(true);
-
                 float RatioW = (float)Width / ui->ImageLab->width();
-
                 float RatioH = (float)Height / ui->ImageLab->height();
-
                 uint16_t MouseX = mouseEvent->localPos().x();
-
                 uint16_t MouseY = mouseEvent->localPos().y();
-
                 uint16_t MousePosX = MouseX * RatioW;
-
                 uint16_t MousePosY = MouseY * RatioH;
-
                 int16_t ShowLabPosX = 30;
-
                 int16_t ShowLabPosY = 30;
-
                 if(Width - MousePosX < 10)
                     ShowLabPosX = -50;
                 if(Height - MousePosY < 5)
                     ShowLabPosY = -20;
 
                 MousePostLab->move((MouseX + ShowLabPosX), (MouseY + ShowLabPosY));
-
                 MousePostLab->setText(QString("(%1,%2)").arg(MousePosX).arg(MousePosY));
-
                 MousePostLab->adjustSize();
             }
             else
@@ -1001,23 +851,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 void MainWindow::UpdateTime()
 {
     time_t nowtime;
-
     struct tm* p;
-
     time(&nowtime);
-
     p = localtime(&nowtime);
-
     NowTime = QString("%1:%2:%3").arg(p->tm_hour, 2, 10, QLatin1Char('0'))
             .arg(p->tm_min, 2, 10, QLatin1Char('0'))
             .arg(p->tm_sec, 2, 10, QLatin1Char('0'));
-
     TimeLab->setText("当前时间：" + NowTime);
-
     ReceiveSpeed = ReceiveCount - ReceiveLastCount;
-
     ReceiveLastCount = ReceiveCount;
-
     DataLab->setText(QString("共接收%1字节，速度%2字节/秒   共发送%3字节")
                     .arg(ReceiveCount, 10)
                     .arg(ReceiveSpeed, 10)
@@ -1054,49 +896,33 @@ QString ByteArrayToHexString(QByteArray ascii)
 QByteArray HexStringToQByteArray(QString str)
 {
     int hexdata,lowhexdata;
-
     int hexdatalen = 0;
-
     int len = str.length();
-
     QByteArray byteData;
-
     byteData.resize(len/2);
-
     char lstr,hstr;
-
     for(int i = 0; i < len; i++)
     {
         hstr=str[i].toLatin1();
-
         if(hstr == ' ')
         {
             i++;
-
             continue;
         }
         i++;
-
         if(i >= len)
             break;
-
         lstr = str[i].toLatin1();
-
         hexdata = ConvertCharToHex(hstr);
-
         lowhexdata = ConvertCharToHex(lstr);
-
         if((hexdata == 16) || (lowhexdata == 16))
             break;
         else
             hexdata = (hexdata << 4) + lowhexdata;
-
         byteData[hexdatalen] = (char)hexdata;
-
         hexdatalen++;
     }
     byteData.resize(hexdatalen);
-
     return byteData;
 }
 
@@ -1127,13 +953,10 @@ char ConvertCharToHex(char ch)
 QString ReadLineChars(FILE* fp, uint32_t line)
 {
     uint32_t i;
-
     char buf[128];
-
     for(i = 0; i <= line; i++)
     {
         fgets(buf, 128, fp);
-
         if(i == line)
         {
             if(buf[strlen(buf) - 1] == '\n')
@@ -1141,7 +964,6 @@ QString ReadLineChars(FILE* fp, uint32_t line)
                 buf[strlen(buf) - 1] = '\0';
             }
             fseek(fp, 0L,SEEK_SET);
-
             return QString(buf);
         }
     }

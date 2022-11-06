@@ -16,26 +16,17 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
     QSharedMemory shared_memory;
-
     shared_memory.setKey(QString("RLCOM"));
-
     if(shared_memory.attach())
     {
-
         QMessageBox::about(NULL, "提示","程序已经在运行！");
-
         return 0;
     }
-
     if(shared_memory.create(1))
     {
-
         MainWindow ui;
-
         ui.show();
-
         return app.exec();
     }
     return 0;
