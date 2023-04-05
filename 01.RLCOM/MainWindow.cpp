@@ -329,16 +329,16 @@ void MainWindow::ReceiveData()
     {
         if(ui->TalkWindowCbox->isChecked())
         {
-            ui->ReceiveTextEdit->append("<font color=\"#FF0020\">" + NowTime + " Receive:" + "</font>");
+            ui->ReceiveTextEdit->insertPlainText("<font color=\"#FF0020\">" + NowTime + " Receive:" + "</font>");
         }
 
         if(!ui->HexShowCbox->isChecked())
         {
-            ui->ReceiveTextEdit->append(Data);
+            ui->ReceiveTextEdit->insertPlainText(Data);
         }
         else
         {
-            ui->ReceiveTextEdit->append(ByteArrayToHexString(Data));
+            ui->ReceiveTextEdit->insertPlainText(ByteArrayToHexString(Data));
         }
         if(ui->AutoFollowCbox->isChecked())
         {

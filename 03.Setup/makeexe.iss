@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "RLCOM"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion "1.1.4"
 #define MyAppPublisher "ÂúÐÄ»¶Ï²"
 #define MyAppExeName "RLCOM.exe"
 #define MyAppAssocName MyAppName + " File"
