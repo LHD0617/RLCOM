@@ -771,7 +771,7 @@ public:
         ReceiveTextEdit->setObjectName(QString::fromUtf8("ReceiveTextEdit"));
         ReceiveTextEdit->setLineWrapMode(QTextEdit::WidgetWidth);
         ReceiveTextEdit->setReadOnly(true);
-        ReceiveTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+        ReceiveTextEdit->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
         gridLayout_2->addWidget(ReceiveTextEdit, 0, 0, 1, 4);
 
