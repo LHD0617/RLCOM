@@ -14,8 +14,8 @@
    <string>RLCOM</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/new/prefix1/logo.png</normaloff>:/new/prefix1/logo.png</iconset>
+   <iconset resource="ICON/icon.qrc">
+    <normaloff>:/icon/logo.png</normaloff>:/icon/logo.png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -507,34 +507,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0">
-     <widget class="QLabel" name="LogoLab">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>200</horstretch>
-        <verstretch>200</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>200</width>
-        <height>200</height>
-       </size>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="ICON/icon.qrc">:/icon/logo.png</pixmap>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QGroupBox" name="ProtConfigure">
       <property name="minimumSize">
