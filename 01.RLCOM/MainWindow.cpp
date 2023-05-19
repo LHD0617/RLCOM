@@ -329,7 +329,7 @@ void MainWindow::ReceiveData()
     {
         if(ui->TalkWindowCbox->isChecked())
         {
-            ui->ReceiveTextEdit->insertPlainText("<font color=\"#FF0020\">" + NowTime + " Receive:" + "</font>");
+            ui->ReceiveTextEdit->append("<font color=\"#FF0020\">" + NowTime + " Receive:" + "</font>");
         }
 
         if(!ui->HexShowCbox->isChecked())
@@ -498,8 +498,7 @@ void MainWindow::SendData()
             {
                 if(ui->TalkWindowCbox->isChecked())
                 {
-                    ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>");
-                    ui->ReceiveTextEdit->append(Data);
+                    ui->ReceiveTextEdit->append("<font color=\"#00DD00\">" + NowTime + " Send:" + "</font>" + Data);
                 }
 
                 if(ui->HexSendCbox->isChecked())

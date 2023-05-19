@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "RLCOM"
-#define MyAppVersion "1.1.7"
+#define MyAppVersion "1.1.8"
 #define MyAppPublisher "ÂúÐÄ»¶Ï²"
 #define MyAppExeName "RLCOM.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\OWNER\Desktop
 OutputBaseFilename=RLCOM_Setup
-SetupIconFile=E:\RLCOM\01.RLCOM\logo.ico
+SetupIconFile=E:\Project\RLCOM\01.RLCOM\logo.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -37,8 +37,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\RLCOM\makeexe\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\RLCOM\makeexe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "E:\Project\RLCOM\makeexe\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Project\RLCOM\makeexe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
